@@ -23,7 +23,7 @@ const router = createBrowserRouter([
                 element: <Leaderboard/>
             },
             {
-                path: '/battle',
+                path: '/battle/:username',
                 element: <Battle/>
             },
         ]
