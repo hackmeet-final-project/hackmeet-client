@@ -3,6 +3,9 @@ import App from "../App";
 import Lobby from "../views/Lobby";
 import Leaderboard from '../views/Leaderboard'
 import Battle from '../views/Battle'
+import Register from "../views/Register";
+import Login from "../views/Login";
+import CreateProfile from "../views/CreateProfile";
 
 const router = createBrowserRouter([
     {
@@ -25,6 +28,18 @@ const router = createBrowserRouter([
             {
                 path: '/battle/:username',
                 element: <Battle/>
+            },
+            {
+                path: '/register',
+                element: <Register/>
+            },
+            {
+                path: '/login',
+                element: <Login/>
+            },
+            {
+                path: '/create-profile',
+                element: <CreateProfile/>
             },
         ]
     }
