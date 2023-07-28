@@ -1,44 +1,25 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from "react";
+import TimerSecond from "./TimerSecond";
 
-const Timer = ({seconds, startTimer, onFinish}) => {
-  const [timer, setTimer] = useState(seconds)
-  const timerId = useRef()
+const Timer = ({ready, setReady}) => {
+    const [coding, setCoding] = useState(false)
+    const [startTimer, setStartTimer] = useState(false)
 
-  const formatTime = (time) => {
-    let minutes = Math.floor(time/60)
-    let seconds = Math.floor(time - minutes * 60)
-
-    if(minutes < 10) {
-      minutes = "0" + minutes
-    } 
-    if(seconds < 10) {
-      seconds = "0" + seconds
-    }
-    return minutes + ":" + seconds
-  }
-  
-  useEffect(() => {
-    timerId.current = setInterval(() => {
-      setTimer(prev => prev - 1)
-    }, 1000)
-
-    return () => clearInterval(timerId.current)
-  }, [startTimer])
-
-  useEffect(() => {
-    if(timer <= 0) {
-      clearInterval(timerId.current)
-      console.log("timer done")
-    }
-  }, [timer, onFinish])
+    useEffect(() => {
+        if (ready) {
+            setStartTimer(true)
+        }
+    }, [ready])
 
 
 
-  return (
-    <div>
-      <h1>Timer: {formatTime(timer)} detik</h1>
-    </div>
-  )
+    return (
+        <div className="d-flex justify-content-center align-items-center rounded-3 position-absolute border border-black shadow-button" style={{backgroundColor: '#EAC787', minHeight: "5vh", minWidth: "6vw", right: "50%", transform: "translate(50%, -50%)"}}>
+            {ready || coding ? '' : <h1>00:00</h1>}
+            {ready && (<TimerSecond seconds={3} startTimer={true} ready={ready} setReady={setReady} coding={coding} setCoding={setCoding} />)}
+            {coding && (<TimerSecond seconds={90} startTimer={startTimer} ready={ready} setReady={setReady} coding={coding} setCoding={setCoding}/>)}
+        </div>
+    )
 }
 
 export default Timer

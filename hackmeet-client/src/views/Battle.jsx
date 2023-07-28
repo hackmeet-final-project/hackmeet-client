@@ -1,5 +1,5 @@
-import Media from "../components/media"
-
+import Media from "../components/Media"
+import Timer from "../components/Timer"
 
 const Battle = () => {
     return (
