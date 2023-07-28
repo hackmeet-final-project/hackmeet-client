@@ -6,7 +6,6 @@ const socket = io('http://localhost:3000')
 // const socket = io('https://hackmeet.kresnativ8.site')
 const myPeer = new Peer()
 
-
 const Media = () => {
     const [ready, setReady] = useState(false)
     const [peerId, setPeerId] = useState('')
@@ -24,6 +23,7 @@ const Media = () => {
       }
     const handleFindMatch = () => {
         if(!room) {
+            console.log(`user find match`)
             socket.emit("join-room", username, peerId)
             navigator.mediaDevices.getUserMedia({ video:true, audio: true })
             .then(stream => {
@@ -32,6 +32,7 @@ const Media = () => {
                 myVideo.muted = true
                 myVideo.srcObject = stream
                 myVideo.onloadedmetadata = () => myVideo.play()
+                console.log(`my user ID`, peerId)
             })
         }
     } 
@@ -39,33 +40,37 @@ const Media = () => {
       socket.on("timer-ready", () => {
         setReady(true)
       })
+      socket.on("assign-room", room => {
+        setRoom(room)
+        console.log(username, `masuk ke room`,room)
+      })
+      myPeer.on("open", id => setPeerId(id))
+      
+      
     }, [])
 
     useEffect(() => {
-      myPeer.on("open", id => setPeerId(id))
-
-      if(peerId) {
-        socket.on("assign-room", (room, peerID) => {
-            setRoom(room)
-            if(peerId !== peerID) {
-                setTimeout(() => {
-                  const call =  myPeer.call(peerID, localStream)
-                  call.on("stream", stream => {
-                      const remoteVideo = document.getElementById("remote-video")
-                      remoteVideo.srcObject = stream
-                      remoteVideo.onloadedmetadata = () => remoteVideo.play()
-                      socket.emit("start-timer", room)
-                  })
-                }, 10)
-            }
-      })
       myPeer.on("call", call => {
+        console.log(`ada telpon masuk`)
         call.answer(localStream)
         call.on("stream", stream => {
             const remoteVideo = document.getElementById("remote-video")
             remoteVideo.srcObject = stream
             remoteVideo.onloadedmetadata = () => remoteVideo.play()
         })
+      })
+      if(peerId) {
+        socket.on("call-user", (room, peerID) => {
+          if(peerId !== peerID) {
+              console.log('calling', peerID)
+              const call =  myPeer.call(peerID, localStream)
+              call.on("stream", stream => {
+                  const remoteVideo = document.getElementById("remote-video")
+                  remoteVideo.srcObject = stream
+                  remoteVideo.onloadedmetadata = () => remoteVideo.play()
+                  socket.emit("start-timer", room)
+              })
+            }
       })
     }
     }, [localStream])
