@@ -1,6 +1,4 @@
-import React, { useRef } from "react"
-import { useState, useEffect } from 'react'
-
+import { useState, useEffect, useRef } from 'react'
 
 const Timer = ({seconds, startTimer, onFinish}) => {
   const [timer, setTimer] = useState(seconds)
