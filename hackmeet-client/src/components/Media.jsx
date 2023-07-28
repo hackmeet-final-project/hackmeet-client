@@ -1,14 +1,15 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import io from "socket.io-client"
-const socket = io('http://localhost:3000/')
+const socket = io('http://localhost:3000')
+// const socket = io('https://hackmeet.kresnativ8.site')
 const myPeer = new Peer()
+
 
 
 const Media = () => {
     const [peerId, setPeerId] = useState('')
     const [localStream, setLocalStream] = useState('')
-    const [remoteStream, setRemoteStream] = useState('')
     const {username} = useParams()
     const [message, setMessage] = useState('')
     const [room, setRoom] = useState('')
@@ -33,35 +34,35 @@ const Media = () => {
             })
         }
     } 
-    useEffect(() => {
-        myPeer.on("open", id => {
-            setPeerId(id)
-        })
-  
-    }, [])
 
     useEffect(() => {
-        if(peerId) {
-            socket.on("assign-room", (room, peerID) => {
-                setRoom(room)
-                if(peerId !== peerID) {
-                    const call = myPeer.call(peerID, localStream)
-                    call.on("stream", stream => {
-                        const remoteVideo = document.getElementById("remote-video")
-                        remoteVideo.srcObject = stream
-                        remoteVideo.onloadedmetadata = () => remoteVideo.play()
-                    })
-                }
-            })
-            myPeer.on("call", call => {
-                call.answer(localStream)
-                call.on("stream", stream => {
-                    const remoteVideo = document.getElementById("remote-video")
-                    remoteVideo.srcObject = stream
-                    remoteVideo.onloadedmetadata = () => remoteVideo.play()
-                })
-            })
-        }
+      myPeer.on("open", id => {
+          setPeerId(id)
+      })
+      if(peerId) {
+        socket.on("assign-room", (room, peerID) => {
+            setRoom(room)
+            if(peerId !== peerID) {
+                setTimeout(() => {
+                  const call =  myPeer.call(peerID, localStream)
+                  call.on("stream", stream => {
+                      const remoteVideo = document.getElementById("remote-video")
+                      remoteVideo.srcObject = stream
+                      remoteVideo.onloadedmetadata = () => remoteVideo.play()
+                  })
+                }, 1000)
+            }
+      })
+      myPeer.on("call", call => {
+        call.answer(localStream)
+        call.on("stream", stream => {
+            const remoteVideo = document.getElementById("remote-video")
+            remoteVideo.srcObject = stream
+            remoteVideo.onloadedmetadata = () => remoteVideo.play()
+        })
+      })
+
+    }
     }, [localStream])
     
     return (
@@ -73,10 +74,10 @@ const Media = () => {
         </div>
         <div className="d-flex gap-3 mt-5" style={{height: '500px'}}>
         <div className="h-100 w-50 bg-dark">
-            <video src="" id="local-video"></video>
+            <video src="" id="local-video"  width={"100%"}></video>
           </div>
           <div className="h-100 w-50 bg-dark" >
-            <video src="" id="remote-video"></video>
+            <video src="" id="remote-video" width={"100%"}></video>
           </div>
         </div>
         <form className="mt-5 d-flex gap-3" onSubmit={sendMessage}>

@@ -1,9 +1,8 @@
 
-
-const leaderboard = () => {
-    return (
-        <h1>Leaderboard</h1>
-    )
+const Leaderboard = () => {
+  return (
+    <h1>Leader Board Page</h1>
+  )
 }
 
-export default leaderboard
+export default Leaderboard
