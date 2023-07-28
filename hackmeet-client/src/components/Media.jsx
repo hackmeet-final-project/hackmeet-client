@@ -56,7 +56,7 @@ const Media = () => {
                       remoteVideo.onloadedmetadata = () => remoteVideo.play()
                       socket.emit("start-timer", room)
                   })
-                }, 1000)
+                }, 10)
             }
       })
       myPeer.on("call", call => {
@@ -71,21 +71,20 @@ const Media = () => {
     }, [localStream])
     
     return (
-      <div className="container mt-5">
+      <div className="container mt-5 py-3">
+        <div className="d-flex gap-3 mt-5" style={{height: '400px'}}>
+        <Timer ready={ready} setReady={setReady}/>
+            <div className="h-100 w-50 bg-dark shadow-button rounded-4 d-flex align-items-center justify-content-center" style={{border: '3px solid white'}}>
+                <video src="" id="local-video"  className='h-100'></video>
+              </div>
+              <div className="h-100 w-50 bg-dark shadow-button rounded-4 d-flex align-items-center justify-content-center" style={{border: '3px solid white'}}>
+                <video src="" id="remote-video" className='h-100'></video>
+              </div>
+        </div>
         <div className="d-flex gap-3">
           <button className="btn btn-primary" onClick={handleFindMatch}>Find Match</button>
           <button className="btn btn-danger">Leave</button>
         </div>
-        <div className="d-flex gap-3 mt-5" style={{height: '500px'}}>
-        <Timer ready={ready} setReady={setReady}/>
-            <div className="h-100 w-50 bg-dark shadow-button rounded-4 d-flex align-items-center" style={{border: '3px solid white'}}>
-                <video src="" id="local-video"  className='w-100'></video>
-              </div>
-              <div className="h-100 w-50 bg-dark shadow-button rounded-4 d-flex align-items-center" style={{border: '3px solid white'}}>
-                <video src="" id="remote-video" className='w-100'></video>
-              </div>
-        </div>
-       
       </div>
     )
 }
