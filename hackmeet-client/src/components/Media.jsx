@@ -13,11 +13,17 @@ const Media = () => {
     const [peerId, setPeerId] = useState('')
     const [localStream, setLocalStream] = useState('')
     const {username} = useParams()
-  
+    const [message, setMessage] = useState('')
+    const [chats, setChats] = useState([])
     const [room, setRoom] = useState('')
     
     const sendMessage = (event) => {
         event.preventDefault()
+        if(message) {
+          socket.emit("send-message", message, room)
+          setChats([...chats, {message, sender: true}])
+          setMessage('')
+        }
     }
     const handleFindMatch = () => {
         if(!room) {
@@ -27,14 +33,22 @@ const Media = () => {
     } 
     useEffect(() => {
       myPeer.on("open", id => setPeerId(id))
+
       socket.on("timer-ready", () => {
-        console.log('set timer')
         setReady(true)
       })
+
       socket.on("assign-room", room => {
         setRoom(room)
         console.log(username, `masuk ke room`,room)
       })
+
+      socket.on("receive-message", message => {
+        setChats(prev => {
+          return prev = [...prev, {message, sender: false}]
+        })
+      })
+
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
       .then(stream => {
           setLocalStream(stream)
@@ -98,8 +112,8 @@ const Media = () => {
             </div>
           </div>
         </div>
-        <div className="w-25 shadow-main rounded-4 my-5 d-flex align-items-center justify-content-center" style={{border: '3px solid white'}}>
-           <Chat sendMessage={sendMessage}/>
+        <div className="w-25 shadow-main rounded-4 my-5 d-flex align-items-center justify-content-center p-2 position-relative" style={{border: '3px solid white', backgroundColor: "rgba(255, 255, 255, 0.3)"}}>
+           <Chat sendMessage={sendMessage} setMessage={setMessage} message={message} chats={chats}/>
         </div>
       </div>
     )
