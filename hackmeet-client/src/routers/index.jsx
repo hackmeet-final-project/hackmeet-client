@@ -9,37 +9,37 @@ import CreateProfile from "../views/CreateProfile";
 
 const router = createBrowserRouter([
     {
-        element: <App/>,
+        element: <App />,
         children: [
             {
                 path: '/',
                 loader: () => {
-                   return redirect('/lobby')
+                    return redirect('/lobby')
                 }
             },
             {
                 path: '/lobby',
-                element: <Lobby/>
+                element: <Lobby />
             },
             {
                 path: '/leaderboard',
-                element: <Leaderboard/>
+                element: <Leaderboard />
             },
             {
                 path: '/battle/:username',
-                element: <Battle/>
+                element: <Battle />
             },
             {
                 path: '/register',
-                element: <Register/>
+                element: <Register />
             },
             {
                 path: '/login',
-                element: <Login/>
+                element: <Login />
             },
             {
                 path: '/create-profile',
-                element: <CreateProfile/>
+                element: <CreateProfile />
             },
         ]
     }
