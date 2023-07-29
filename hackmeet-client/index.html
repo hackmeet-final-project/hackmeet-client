@@ -4,17 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hackmeet</title>
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js" defer></script>
   </head>
   <body>
     <style>
       :root {
-        --background-primary: rgb(153, 217, 234);
+        --primary-color: rgb(153, 217, 234);
         --secondary-color: rgb(255, 190, 121);
+        --third-color: rgb(50,16,102);
+        --fourth-color: rgb(232, 110, 127);
+      }
+
+      .button-hover {
+        transition: all 0.3s;
+      }
+
+      .button-hover:hover {
+        opacity: 0.9;
       }
 
       body {
-        background-color: var(--background-primary);
+        background-color: var(--primary-color);
       }
 
       img:hover {
@@ -23,7 +32,7 @@
       }
 
       body {
-        background: var(--background-primary);
+        background: var(--primary-color);
         color: #333;
         font: 100% Arial, Sans Serif;
         height: 100vh;
@@ -42,7 +51,7 @@
         z-index: -1;
       }
 
-      .shadow-button {
+      .shadow-main {
         box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
       }
 

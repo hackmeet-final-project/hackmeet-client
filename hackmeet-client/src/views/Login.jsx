@@ -43,7 +43,7 @@ const Login = () => {
 
     return (
         <div className="container-fluid d-flex align-items-center justify-content-center" style={{height:"100vh"}}>
-                    <div className="card rounded-5 border-2 border-secondary shadow-button w-25">
+                    <div className="card rounded-5 border-2 border-secondary shadow-main w-25">
                         <div className="card-body">
                             <h2 className="mb-3 text-center fw-bold " >Login</h2>
                             <form action="" onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ const Login = () => {
                                     <label htmlFor="" className="fw-bold">Password</label> <br />
                                     <input type="password" name="" placeholder="Input your password" className="form-control" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)}/>
                                 </div> <br />
-                                <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary" style={{ backgroundColor: " #E86E7F"}} type="submit">Sign In</button>
+                                <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary" style={{ backgroundColor: "#E86E7F"}} type="submit">Sign In</button>
                             </form>
                         </div>
                     </div>

@@ -1,9 +1,8 @@
 import Media from "../components/Media"
-import Timer from "../components/Timer"
 
 const Battle = () => {
     return (
-        <div className="container-fluid w-100">
+        <div className="container-fluid w-100" style={{height: "100vh"}}>
             <Media/>
         </div>
     )

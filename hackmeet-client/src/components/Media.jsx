@@ -1,7 +1,9 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
+import { io } from "socket.io-client"
+import { Peer } from "peerjs"
 import Timer from './Timer'
-import io from "socket.io-client"
+import Chat from './Chat'
 const socket = io('http://localhost:3000')
 // const socket = io('https://hackmeet.kresnativ8.site')
 const myPeer = new Peer()
@@ -11,16 +13,12 @@ const Media = () => {
     const [peerId, setPeerId] = useState('')
     const [localStream, setLocalStream] = useState('')
     const {username} = useParams()
-    const [message, setMessage] = useState('')
+  
     const [room, setRoom] = useState('')
-    const handleFormChange = (event) => {
-        setMessage(event.target.value)
-      }
+    
     const sendMessage = (event) => {
         event.preventDefault()
-        console.log(message)
-        setMessage('')
-      }
+    }
     const handleFindMatch = () => {
         if(!room) {
           console.log(`user find match`, peerId)
@@ -75,19 +73,33 @@ const Media = () => {
     }, [localStream])
     
     return (
-      <div className="container mt-5 py-3">
-        <div className="d-flex gap-3 mt-5" style={{height: '400px'}}>
-        <Timer ready={ready} setReady={setReady}/>
-            <div className="h-100 w-50 bg-dark shadow-button rounded-4 d-flex align-items-center justify-content-center" style={{border: '3px solid white'}}>
-                <video src="" id="local-video"  className='h-100'></video>
+      <div className="container gap-3 py-5 d-flex h-100">
+        <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
+          <Timer ready={ready} setReady={setReady}/>
+          
+          <div className='d-flex gap-2'style={{height: '45%'}}>
+            <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
+              <video src="" id="local-video"  className='w-100'></video>
+            </div>
+            <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
+              <video src="" id="remote-video" className='w-100'></video>
+            </div>
+          </div>
+          <div className='d-flex' style={{height: '45%'}}>
+            <div className="h-100 w-50 bg-dark shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
+              {/* Code Editor */}
+            </div>
+            <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
+              <p className='text-dark fs-5' style={{textAlign: 'justify'}}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci enim quo, eaque labore, necessitatibus cum, nobis porro sunt cumque animi praesentium. Perspiciatis vel velit officiis.</p>
+              <div className="d-flex position-absolute gap-1" style={{width: "220px", bottom: 10, right: 5}}>
+                <button className="btn w-50 shadow-main text-dark button-hover" onClick={handleFindMatch} style={{backgroundColor: "var(--primary-color)"}}>Find Match</button>
+                <button className="btn w-50 shadow-main text-dark button-hover" style={{backgroundColor: "var(--fourth-color)"}}>Leave</button>
               </div>
-              <div className="h-100 w-50 bg-dark shadow-button rounded-4 d-flex align-items-center justify-content-center" style={{border: '3px solid white'}}>
-                <video src="" id="remote-video" className='h-100'></video>
-              </div>
+            </div>
+          </div>
         </div>
-        <div className="d-flex gap-3">
-          <button className="btn btn-primary" onClick={handleFindMatch}>Find Match</button>
-          <button className="btn btn-danger">Leave</button>
+        <div className="w-25 shadow-main rounded-4 my-5 d-flex align-items-center justify-content-center" style={{border: '3px solid white'}}>
+           <Chat sendMessage={sendMessage}/>
         </div>
       </div>
     )

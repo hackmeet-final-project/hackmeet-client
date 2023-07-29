@@ -45,7 +45,7 @@ const CreateProfile = () => {
 
     return (
         <div className="container-fluid d-flex align-items-center justify-content-center" style={{height:"100vh"}}>
-            <div className="card rounded-5 border-2 border-secondary shadow-button w-25">
+            <div className="card rounded-5 border-2 border-secondary shadow-main w-25">
                 <div className="card-body">
                     <h2 className="mb-3 text-center fw-bold " >Create Profile</h2>
                     <form action="" onSubmit={handleSubmit}>
