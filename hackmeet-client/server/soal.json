@@ -1,0 +1,110 @@
+{
+  "soal": [
+    {
+      "id": 0,
+      "answer": "function main(a, b) {\n      // your code here \n}",
+      "pertanyaan": "Buatlah sebuah function yang menerima 2 param a,b dan mengembalikan hasil perkalian dari fn tersebut",
+      "testcase": [
+        {
+          "arguments": [4, 2],
+          "answer": 8
+        },
+        {
+          "arguments": [10, 2],
+          "answer": 20
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "answer": "function main(a, b) {\n      // your code here \n}",
+      "pertanyaan": "Buatlah sebuah function yang menerima 2 param a,b dan mengembalikan hasil penjumlahan dari fn tersebut",
+      "testcase": [
+        {
+          "arguments": [4, 2],
+          "answer": 6
+        },
+        {
+          "arguments": [10, 2],
+          "answer": 12
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "answer": "function main(a, b) {\n      // your code here \n}",
+      "pertanyaan": "Buatlah sebuah function yang menerima 2 param a,b dan mengembalikan hasil pembagian dari fn tersebut",
+      "testcase": [
+        {
+          "arguments": [4, 2],
+          "answer": 2
+        },
+        {
+          "arguments": [10, 2],
+          "answer": 5
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "answer": "function main(a, b) {\n      // your code here \n}",
+      "pertanyaan": "Buatlah sebuah function yang menerima 2 param a,b dan mengembalikan hasil pengurangan dari fn tersebut",
+      "testcase": [
+        {
+          "arguments": [4, 2],
+          "answer": 2
+        },
+        {
+          "arguments": [10, 2],
+          "answer": 8
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "answer": "function squareSum(numbers){\n\n}",
+      "pertanyaan": "Complete the square sum function so that it squares each number passed into it \nand then sums the results together.\n For example, for [1, 2, 2] it should return 9 because 1²+2²+2²=9 ",
+      "testcase": [
+        {
+          "arguments": [[1, 2]],
+          "answer": 5
+        },
+        {
+          "arguments": [[0, 3, 4, 5]],
+          "answer": 50
+        },
+        {
+          "arguments": [[]],
+          "answer": 0
+        },
+        {
+          "arguments": [[0, -13, -12]],
+          "answer": 313
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "answer": "function boolToWord( bool ){\n     //...\n}",
+      "pertanyaan": "Complete the method that takes a boolean value and return a 'Yes' string for true, or a 'No' string for false.",
+      "testcase": [
+        {
+          "arguments": [true],
+          "answer": "Yes"
+        },
+        {
+          "arguments": [true],
+          "answer": "Yes"
+        },
+        {
+          "arguments": [false],
+          "answer": "No"
+        },
+        {
+          "arguments": [false],
+          "answer": "No"
+        }
+      ]
+    }
+  ]
+}
