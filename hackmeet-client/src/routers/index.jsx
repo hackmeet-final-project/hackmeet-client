@@ -27,10 +27,10 @@ const router = createBrowserRouter([
         path: "/battle",
         element: <Battle />,
       },
-      {
-        path: "/battleSand",
-        element: <BattleSandpack />,
-      },
+      // {
+      //   path: "/battleSand",
+      //   element: <BattleSandpack />,
+      // },
     ],
   },
 ]);
