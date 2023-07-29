@@ -1,30 +1,28 @@
-import React, { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSoal } from "../store/actionCreator";
 
 export default function BattleUI() {
   const soal = useSelector((state) => {
     return state.soal.data;
   });
-  const [indexSoal, setIndexSoal] = useState(5);
+
+  const [indexSoal, setIndexSoal] = useState(1);
   const [errorText, setErrorText] = useState();
   const [answer, setAnswer] = useState("");
-
   const [testCases, setTestCase] = useState([]);
-
   const [passedTest, setPassedTest] = useState(0);
 
+  const dispatch = useDispatch()
+  const isLoading = useSelector((state) => {
+    return state.soal.isLoading;
+  });
   function handleEditorChange(value, event) {
     console.log("here is the current model value:", value);
     setAnswer(value);
   }
-  useEffect(() => {
-    setAnswer(soal[indexSoal].defaultAnswer);
-    setTestCase(soal[indexSoal].testcases);
-  }, [indexSoal]);
-
-  //   console.log(soal);
 
   function handleSubmit() {
     const firstParameterIndex = answer.indexOf("(");
@@ -68,6 +66,14 @@ export default function BattleUI() {
     } else Swal.fire("testing...", msg, "question");
   }
 
+  useEffect(() => {
+    dispatch(fetchSoal());
+    console.log(soal, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <h1>loading....fetching data</h1>;
+  }
   return (
     <>
       <div className="container-fluid w-75 mt-5">

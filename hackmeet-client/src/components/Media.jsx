@@ -4,6 +4,7 @@ import { io } from "socket.io-client"
 import { Peer } from "peerjs"
 import Timer from './Timer'
 import Chat from './Chat'
+import BattleUI from "./BattleUI";
 const socket = io('http://localhost:3000')
 // const socket = io('https://hackmeet.kresnativ8.site')
 const myPeer = new Peer()
@@ -16,7 +17,7 @@ const Media = () => {
     const [message, setMessage] = useState('')
     const [chats, setChats] = useState([])
     const [room, setRoom] = useState('')
-    
+   
     const sendMessage = (event) => {
         event.preventDefault()
         if(message) {
@@ -32,6 +33,7 @@ const Media = () => {
         }
     } 
     useEffect(() => {
+
       myPeer.on("open", id => setPeerId(id))
 
       socket.on("timer-ready", () => {
@@ -85,6 +87,7 @@ const Media = () => {
         })
       }
     }, [localStream])
+
     
     return (
       <div className="container gap-3 py-5 d-flex h-100">
@@ -101,7 +104,7 @@ const Media = () => {
           </div>
           <div className='d-flex' style={{height: '45%'}}>
             <div className="h-100 w-50 bg-dark shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
-              {/* Code Editor */}
+                <BattleUI />
             </div>
             <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
               <p className='text-dark fs-5' style={{textAlign: 'justify'}}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci enim quo, eaque labore, necessitatibus cum, nobis porro sunt cumque animi praesentium. Perspiciatis vel velit officiis.</p>
