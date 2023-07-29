@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { fetchSoal } from "../store/actionCreator";
 import { useDispatch, useSelector } from "react-redux";
 import BattleUI from "../../components/BattleUI";
@@ -7,9 +7,6 @@ const Battle = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => {
     return state.soal.isLoading;
-  });
-  const soal = useSelector((state) => {
-    return state.soal.data;
   });
   useEffect(() => {
     dispatch(fetchSoal());
@@ -21,7 +18,7 @@ const Battle = () => {
 
   return (
     <>
-      <BattleUI soal={soal} />
+      <BattleUI />
     </>
   );
 };

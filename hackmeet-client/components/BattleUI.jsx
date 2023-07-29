@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
-export default function BattleUI({ soal }) {
-  const [indexSoal, setIndexSoal] = useState(0);
+export default function BattleUI() {
+  const soal = useSelector((state) => {
+    return state.soal.data;
+  });
+  const [indexSoal, setIndexSoal] = useState(5);
   const [errorText, setErrorText] = useState();
-  const [answer, setAnswer] = useState(`function main(a, b) {
-    // your code here 
-  }`);
+  const [answer, setAnswer] = useState("");
 
   const [testCases, setTestCase] = useState([]);
 
@@ -18,11 +20,11 @@ export default function BattleUI({ soal }) {
     setAnswer(value);
   }
   useEffect(() => {
-    setAnswer(soal[indexSoal].answer);
-    setTestCase(soal[indexSoal].testcase);
+    setAnswer(soal[indexSoal].defaultAnswer);
+    setTestCase(soal[indexSoal].testcases);
   }, [indexSoal]);
 
-  console.log(testCases);
+  //   console.log(soal);
 
   function handleSubmit() {
     const firstParameterIndex = answer.indexOf("(");
@@ -59,8 +61,7 @@ export default function BattleUI({ soal }) {
     console.log(answerFunction, "<");
     setPassedTest(totalTestPassed);
 
-    const msg = `Total Test : ${totalTest}\n
-    Total Test Passed : ${totalTestPassed}\n
+    const msg = `Total Test Passed : ${totalTestPassed}\n
     Total Test Failed : ${totalTestFailed}`;
     if (totalTestPassed === totalTest) {
       Swal.fire("testing...", msg, "success");
@@ -70,12 +71,12 @@ export default function BattleUI({ soal }) {
   return (
     <>
       <div className="container-fluid w-75 mt-5">
-        <h1>{soal[indexSoal].pertanyaan}</h1>
+        <h1>{soal[indexSoal].question}</h1>
         <hr />
         <Editor
           width={"100vh"}
           height="40vh"
-          value={soal[indexSoal].answer}
+          value={soal[indexSoal].defaultAnswer}
           theme="vs-dark"
           defaultLanguage="javascript"
           defaultValue="// some comment"
