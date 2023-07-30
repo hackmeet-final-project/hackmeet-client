@@ -1,22 +1,25 @@
 import Editor from "@monaco-editor/react";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function CodeEditor() {
-  const [indexSoal, setIndexSoal] = useState(1);
   const [errorText, setErrorText] = useState();
   const [answer, setAnswer] = useState("");
-  const [testCases, setTestCase] = useState([]);
   const [passedTest, setPassedTest] = useState(0);
-  const dispatch = useDispatch()
   const isLoading = useSelector((state) => {
     return state.soal.isLoading;
   });
+
   const defaultAnswer = useSelector(state => {
     return state.soal.defaultAnswer
   })
-  function handleEditorChange(value, event) {
+
+  const testCases = useSelector(state => {
+    return state.soal.testcases
+  })
+
+  function handleEditorChange(value) {
     console.log("here is the current model value:", value);
     setAnswer(value);
   }
@@ -32,7 +35,7 @@ export default function CodeEditor() {
     const functionBody = answer.slice(firstBracketIndex + 1, lastBracketIndex);
     let answerFunction = Function(...functionParam, functionBody);
 
-    console.log(answerFunction);
+    console.log(defaultAnswer)
 
     let totalTest = testCases.length;
     let totalTestPassed = 0;
@@ -44,7 +47,6 @@ export default function CodeEditor() {
         result = answerFunction(...test.arguments);
         setErrorText();
       } catch (error) {
-        console.log({ msg: error });
         setErrorText(error.message);
       }
       console.log(test, test.answer, "---", result);
@@ -53,7 +55,6 @@ export default function CodeEditor() {
       }
     });
 
-    console.log(answerFunction, "<");
     setPassedTest(totalTestPassed);
 
     const msg = `Total Test Passed : ${totalTestPassed}\n
@@ -66,23 +67,20 @@ export default function CodeEditor() {
   if (isLoading) {
     return <h1>loading....fetching data</h1>;
   }
+  
   return (
     <>
-      <div className="container-fluid w-100 mt-5">
-        <hr />
         <Editor
-          width={"100vh"}
-          height="40vh"
+          width="100%"
+          height="70%"
           value={defaultAnswer}
           theme="vs-dark"
           defaultLanguage="javascript"
           defaultValue="// some comment"
           onChange={handleEditorChange}
         />
-        <hr />
         <button onClick={handleSubmit}>Submit</button>
         <h2 className="text-danger">{errorText}</h2>
-      </div>
     </>
   );
 }

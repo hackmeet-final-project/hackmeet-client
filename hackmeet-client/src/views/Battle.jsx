@@ -7,7 +7,7 @@ import CodeEditor from '../components/CodeEditor'
 import Media from "../components/Media"
 
 const Battle = () => {
-    const [ready, setReady] = useState(true)
+    const [ready, setReady] = useState(false)
     const [startCoding, setStartCoding] = useState(false)
     const [message, setMessage] = useState('')
     const [chats, setChats] = useState([])
@@ -35,6 +35,7 @@ const Battle = () => {
       }
     }, [ready])
 
+    console.log(soal, "<<<<<<<")
     return (
       <div className="container-fluid w-100" style={{ height: "100vh" }}>
         <div className="container gap-3 py-5 d-flex h-100">
@@ -42,8 +43,8 @@ const Battle = () => {
             <Timer ready={ready} setReady={setReady}/>
             <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats}/>
             <div className='d-flex' style={{height: '50%'}}>
-              <div className="h-100 w-50 bg-dark shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
-                  {startCoding ? <CodeEditor soal={soal}/> : 'Your Editor'}
+              <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
+                  {startCoding ? <CodeEditor soal={soal}/> : ''}
               </div>
               <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
                   {startCoding ? 

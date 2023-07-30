@@ -5,6 +5,7 @@ const initialState = {
   id: null,
   defaultAnswer: "",
   question: "",
+  testcases: [],
   isLoading: true
 };
 
@@ -24,7 +25,8 @@ const soalReducer = (state = initialState, action) => {
        return {
         ...state,
         defaultAnswer: state.data[action.payload].defaultAnswer,
-        question: state.data[action.payload].question
+        question: state.data[action.payload].question,
+        testcases: state.data[action.payload].testcases
        }
     default:
       return state;
