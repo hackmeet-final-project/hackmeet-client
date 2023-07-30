@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSoal } from "../store/actionCreator";
 
-export default function BattleUI() {
+export default function CodeEditor() {
   const soal = useSelector((state) => {
     return state.soal.data;
   });
@@ -67,6 +67,7 @@ export default function BattleUI() {
   }
 
   useEffect(() => {
+    console.log(`kesini ?`)
     dispatch(fetchSoal());
   }, [isLoading]);
 

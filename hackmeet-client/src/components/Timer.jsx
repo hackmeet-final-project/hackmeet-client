@@ -6,7 +6,6 @@ const Timer = ({ready, setReady}) => {
     const [startTimer, setStartTimer] = useState(false)
 
     useEffect(() => {
-        console.log(`timer status`, ready)
         if (ready) {
             setStartTimer(true)
         }

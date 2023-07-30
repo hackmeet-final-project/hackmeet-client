@@ -1,4 +1,3 @@
-import { useState } from "react"
 
 
 const Chat = ({sendMessage, setMessage, message, chats}) => {

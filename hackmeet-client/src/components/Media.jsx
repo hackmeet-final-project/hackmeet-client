@@ -5,7 +5,7 @@ const socket = io('http://localhost:3000')
 // const socket = io('https://hackmeet.kresnativ8.site')
 const myPeer = new Peer()
 
-const Media = forwardRef(({ message, setMessage, chats, setChats, setReady}, ref) => {
+const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats}, ref) => {
   useImperativeHandle(ref, () => {
     return {
       handleFindMatch,
@@ -18,18 +18,18 @@ const Media = forwardRef(({ message, setMessage, chats, setChats, setReady}, ref
     const [room, setRoom] = useState('')
    
     const sendMessage = (event) => {
-        event.preventDefault()
-        if(message) {
+      event.preventDefault()
+        if(ready && message) {
           socket.emit("send-message", message, room)
           setChats([...chats, {message, sender: true}])
-          setMessage('')
         }
+      setMessage('')
     }
     const handleFindMatch = () => {
-        if(!room) {
-          console.log(`user find match`, peerId)
-          socket.emit("join-room", username, peerId)
-        }
+      if(!room) {
+        console.log(`user find match`, peerId, 'from handleFindMatch')
+        socket.emit("join-room", username, peerId)
+      }
     } 
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const Media = forwardRef(({ message, setMessage, chats, setChats, setReady}, ref
 
       socket.on("assign-room", room => {
         setRoom(room)
-        console.log(username, `masuk ke room`,room)
+        console.log(username, `masuk ke room`, room, 'from socket.on assign-room')
       })
 
       socket.on("receive-message", message => {
@@ -57,10 +57,10 @@ const Media = forwardRef(({ message, setMessage, chats, setChats, setReady}, ref
           myVideo.muted = true
           myVideo.srcObject = stream
           myVideo.onloadedmetadata = () => myVideo.play()
-          console.log(username, `user ID`, peerId)
+          console.log(username, `user ID`, 'from navigator.mediaDevices')
 
           myPeer.on("call", call => {
-            console.log(`ada telpon masuk`, stream)
+            console.log(`ada telpon masuk`, stream, 'from myPeer.on call navigator')
             call.answer(stream)
             call.on("stream", stream => {
                 const remoteVideo = document.getElementById("remote-video")
@@ -88,7 +88,7 @@ const Media = forwardRef(({ message, setMessage, chats, setChats, setReady}, ref
     }, [localStream])
 
     return (
-      <div className='d-flex gap-2'style={{height: '45%'}}>
+      <div className='d-flex gap-2'style={{height: '40%'}}>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
         </div>
