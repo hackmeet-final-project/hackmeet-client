@@ -1,4 +1,4 @@
-import { FETCH_ALL_QUESTION, SET_QUESTION_LOADING } from "../actions/question/actionType";
+import { FETCH_ALL_QUESTION, GENERATE_RANDOM_QUESTION, SET_QUESTION_LOADING } from "../actions/question/actionType";
 
 const initialState = {
   data: [],
@@ -20,6 +20,12 @@ const soalReducer = (state = initialState, action) => {
         ...state,
         isLoading: action.payload 
       };
+    case GENERATE_RANDOM_QUESTION:
+       return {
+        ...state,
+        defaultAnswer: state.data[action.payload].defaultAnswer,
+        question: state.data[action.payload].question
+       }
     default:
       return state;
   }

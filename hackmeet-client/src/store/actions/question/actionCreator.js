@@ -1,4 +1,4 @@
-import { FETCH_ALL_QUESTION, SET_QUESTION_LOADING } from "./actionType";
+import { FETCH_ALL_QUESTION, GENERATE_RANDOM_QUESTION, SET_QUESTION_LOADING } from "./actionType";
 
 const BASE_URL = " http://localhost:3000";
 
@@ -14,6 +14,12 @@ export const setQuestionLoading = (data) => {
     payload: data
   };
 };
+export const generateQuestion = (number) => {
+  return {
+    type: GENERATE_RANDOM_QUESTION,
+    payload: number
+  }
+}
 
 export const fetchSoal = () => {
   return async(dispatch, getState) => {
@@ -31,6 +37,7 @@ export const fetchSoal = () => {
       .then((data) => {
         dispatch(fetchSuccess(data));
         dispatch(setQuestionLoading(false))
+        return data
       })
       .catch((err) => {
         console.log(err);

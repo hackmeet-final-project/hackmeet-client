@@ -3,18 +3,19 @@ import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function CodeEditor({soal}) {
-
+export default function CodeEditor() {
   const [indexSoal, setIndexSoal] = useState(1);
   const [errorText, setErrorText] = useState();
   const [answer, setAnswer] = useState("");
   const [testCases, setTestCase] = useState([]);
   const [passedTest, setPassedTest] = useState(0);
-
   const dispatch = useDispatch()
   const isLoading = useSelector((state) => {
     return state.soal.isLoading;
   });
+  const defaultAnswer = useSelector(state => {
+    return state.soal.defaultAnswer
+  })
   function handleEditorChange(value, event) {
     console.log("here is the current model value:", value);
     setAnswer(value);
@@ -67,13 +68,12 @@ export default function CodeEditor({soal}) {
   }
   return (
     <>
-      <div className="container-fluid w-75 mt-5">
-        <h1>{soal[indexSoal].question}</h1>
+      <div className="container-fluid w-100 mt-5">
         <hr />
         <Editor
           width={"100vh"}
           height="40vh"
-          value={soal[indexSoal].defaultAnswer}
+          value={defaultAnswer}
           theme="vs-dark"
           defaultLanguage="javascript"
           defaultValue="// some comment"

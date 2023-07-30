@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchSoal } from '../store/actions/question/actionCreator'
+import { fetchSoal, generateQuestion } from '../store/actions/question/actionCreator'
 import Timer from '../components/Timer'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
@@ -8,6 +8,7 @@ import Media from "../components/Media"
 
 const Battle = () => {
     const [ready, setReady] = useState(true)
+    const [startCoding, setStartCoding] = useState(false)
     const [message, setMessage] = useState('')
     const [chats, setChats] = useState([])
     const mediaRef = useRef()
@@ -15,15 +16,24 @@ const Battle = () => {
     const soal = useSelector(state => {
       return state.soal.data
     })
+    const question = useSelector(state => {
+      return state.soal.question
+    })
 
     useEffect(() => {
       if(ready) {
         console.log(ready, 'from useEffect Battle ')
-        dispatch(fetchSoal());
+        dispatch(fetchSoal())
+        .then(soal => {
+          const generateNumber = Math.ceil(Math.random() * soal.length)
+          dispatch(generateQuestion(generateNumber))
+          setStartCoding(true)
+        })
+        .catch(error => {
+          console.log(error)
+        })
       }
     }, [ready])
-
-    console.log(soal)
 
     return (
       <div className="container-fluid w-100" style={{ height: "100vh" }}>
@@ -33,19 +43,20 @@ const Battle = () => {
             <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats}/>
             <div className='d-flex' style={{height: '50%'}}>
               <div className="h-100 w-50 bg-dark shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
-                  {ready ? <CodeEditor soal={soal}/> : 'Your Editor'}
+                  {startCoding ? <CodeEditor soal={soal}/> : 'Your Editor'}
               </div>
               <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
-                <p className='text-dark fs-5' style={{textAlign: 'justify'}}>
-                  {ready ? 
-                  'Ini adalah soal yang sangat sulit tolong dikerjakan hati-hati' : 
+                  {startCoding ? 
+                    <p className='text-dark fs-5' style={{textAlign: 'justify'}}>
+                      {question}
+                    </p> 
+                    : 
                     <div className="position-relative d-flex align-items-center justify-content-center">
-                      <i class="bi bi-question position-absolute display-1"></i>
-                      <i class="bi bi-cloud-fill text-white" style={{fontSize: '300px', textShadow: "3px 4px 10px rgba(0, 0, 0, 0.57)"}}>
+                      <i className="bi bi-question position-absolute display-1"></i>
+                      <i className="bi bi-cloud-fill text-white" style={{fontSize: '300px', textShadow: "3px 4px 10px rgba(0, 0, 0, 0.57)"}}>
                       </i>
                     </div> 
                   }
-                </p>
                 <div className="d-flex position-absolute gap-1" style={{width: "230px", bottom: 10, right: 5}}>
                   <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--primary-color)"}} onClick={() => mediaRef.current.handleFindMatch()}>Find Match</button>
                   <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--fourth-color)"}}>Leave</button>
