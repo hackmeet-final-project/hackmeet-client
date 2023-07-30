@@ -9,8 +9,7 @@ export const loadingSuccess = (data) => {
 };
 
 export const fetchSoal = () => {
-  console.log(`tesssssssssssssssssssssssssssssssssss`)
-  return (dispatch, getState) => {
+  return async(dispatch, getState) => {
     return fetch(BASE_URL + "/questions", {
       headers: {
         access_token: localStorage.access_token,
@@ -24,11 +23,10 @@ export const fetchSoal = () => {
       })
       .then((data) => {
         dispatch(fetchSuccess(data));
-        console.log(`tes`)
+        dispatch(loadingSuccess(false))
       })
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => dispatch(loadingSuccess(false)));
   };
 };

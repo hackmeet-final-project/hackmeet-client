@@ -68,7 +68,6 @@ export default function BattleUI() {
 
   useEffect(() => {
     dispatch(fetchSoal());
-    console.log(soal, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
   }, [isLoading]);
 
   if (isLoading) {

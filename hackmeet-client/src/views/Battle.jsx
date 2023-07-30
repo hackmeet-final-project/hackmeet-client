@@ -1,13 +1,13 @@
-import Media from "../components/Media";
+// import Media from "../components/Media";
 
 
-const Battle = () => {
+// const Battle = () => {
 
-  return (
-    <div className="container-fluid w-100" style={{ height: "100vh" }}>
-      <Media />
-    </div>
-  );
-};
+//   return (
+//     <div className="container-fluid w-100" style={{ height: "100vh" }}>
+//       <Media />
+//     </div>
+//   );
+// };
 
-export default Battle;
+// export default Battle;
