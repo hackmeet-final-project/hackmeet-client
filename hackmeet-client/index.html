@@ -7,13 +7,24 @@
   </head>
   <body>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400&display=swap');
       :root {
         --primary-color: rgb(153, 217, 234);
         --secondary-color: rgb(255, 190, 121);
         --third-color: rgb(50,16,102);
         --fourth-color: rgb(232, 110, 127);
       }
-
+      
+      body {
+        background: var(--primary-color);
+        color: #333;
+        font-family: 100% 'Montserrat', sans-serif;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      
       .button-hover {
         transition: all 0.3s;
       }
@@ -22,23 +33,9 @@
         opacity: 0.85;
       }
 
-      body {
-        background-color: var(--primary-color);
-      }
-
       img:hover {
         animation: shake 0.5s;
         animation-iteration-count: infinite;
-      }
-
-      body {
-        background: var(--primary-color);
-        color: #333;
-        font: 100% Arial, Sans Serif;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
       }
 
       #background-wrap {

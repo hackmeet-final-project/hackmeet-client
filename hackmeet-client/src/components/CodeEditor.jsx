@@ -2,12 +2,8 @@ import Editor from "@monaco-editor/react";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSoal } from "../store/actionCreator";
 
-export default function CodeEditor() {
-  const soal = useSelector((state) => {
-    return state.soal.data;
-  });
+export default function CodeEditor({soal}) {
 
   const [indexSoal, setIndexSoal] = useState(1);
   const [errorText, setErrorText] = useState();
@@ -65,11 +61,6 @@ export default function CodeEditor() {
       Swal.fire("testing...", msg, "success");
     } else Swal.fire("testing...", msg, "question");
   }
-
-  useEffect(() => {
-    console.log(`kesini ?`)
-    dispatch(fetchSoal());
-  }, [isLoading]);
 
   if (isLoading) {
     return <h1>loading....fetching data</h1>;

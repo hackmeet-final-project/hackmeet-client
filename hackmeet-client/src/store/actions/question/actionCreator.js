@@ -1,11 +1,18 @@
-import { useDispatch } from "react-redux";
+import { FETCH_ALL_QUESTION, SET_QUESTION_LOADING } from "./actionType";
+
 const BASE_URL = " http://localhost:3000";
 
 export const fetchSuccess = (data) => {
-  return { type: "soal/fetchAll", payload: data };
+  return { 
+    type: FETCH_ALL_QUESTION,
+    payload: data
+  };
 };
-export const loadingSuccess = (data) => {
-  return { type: "soal/isLoading", payload: data };
+export const setQuestionLoading = (data) => {
+  return { 
+    type: SET_QUESTION_LOADING,
+    payload: data
+  };
 };
 
 export const fetchSoal = () => {
@@ -23,7 +30,7 @@ export const fetchSoal = () => {
       })
       .then((data) => {
         dispatch(fetchSuccess(data));
-        dispatch(loadingSuccess(false))
+        dispatch(setQuestionLoading(false))
       })
       .catch((err) => {
         console.log(err);
