@@ -10,6 +10,12 @@ import CreateProfile from "../views/CreateProfile";
 const router = createBrowserRouter([
   {
     element: <App />,
+    loader: () => {
+      if(localStorage.access_token) {
+        return null
+      }
+      return redirect('/login')
+    },
     children: [
       {
         path: "/",
@@ -29,20 +35,32 @@ const router = createBrowserRouter([
         path: "/battle",
         element: <Battle />,
       },
+      {
+        path: "/create-profile",
+        element: <CreateProfile />,
+      },
     ]
   },
   {
     path: "/register",
     element: <Register />,
+    loader: () => {
+      if(localStorage.access_token) {
+        return redirect('/')
+      }
+      return null
+    }
   },
   {
     path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/create-profile",
-    element: <CreateProfile />,
-  },
+    element: <Login/>,
+    loader: () => {
+      if(localStorage.access_token) {
+        return redirect('/')
+      }
+      return null
+    }
+  }
 ]);
 
 export default router;

@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { fetchUserProfile } from "../store/actions/user/actionCreator";
 
 const Login = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const baseUrl = "http://localhost:3000"
@@ -21,7 +24,6 @@ const Login = () => {
             if (res.ok) {
                 const data = await res.json()
                 localStorage.access_token = data.access_token
-                console.log(data.access_token)
                 Swal.fire(
                     'Success login!',
                     "Succes!",
