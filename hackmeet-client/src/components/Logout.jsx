@@ -5,7 +5,7 @@ const Logout = () => {
         localStorage.clear()
     }
     return (
-        <button className="btn btn-secondary" onClick={handleLogout}>Logout</button>
+        <button className="btn btn-secondary position-absolute" onClick={handleLogout}>Logout</button>
     )
 }
 

@@ -51,6 +51,29 @@
       #chat-container::-webkit-scrollbar {
         display: none;
       }
+      
+      #match-found-container {
+        height: 100vh;
+        background-color: black;
+        left: 0;
+        z-index: 998;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      #match-found {
+        margin: 0;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 20vh;
+        width: 100vw;
+        scale: 1;
+        z-index: 999;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        animation: matchfound 0.3s linear ;
+        transition: cubic-bezier();
+      }
 
       .shadow-main {
         box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
@@ -60,6 +83,15 @@
         box-shadow: rgba(56, 91, 131, 0.4) 0px 0px 0px 2px, rgba(44, 6, 41, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
       }
       /* KEYFRAMES */
+
+      @keyframes matchfound {
+        0% {
+          scale: 0;
+        }
+        100% {
+          scale: 1;
+        }
+      }
 
       @-webkit-keyframes animateCloud {
         0% {

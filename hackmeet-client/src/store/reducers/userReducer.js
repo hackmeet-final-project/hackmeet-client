@@ -2,7 +2,6 @@ import { GET_USER_PROFILE, SET_LOGIN } from "../actions/user/actionType"
 
 const initialState = {
     profile: [],
-    isLogin: false
 }
 
 const userReducer = (state = initialState, action) => {

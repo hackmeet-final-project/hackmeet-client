@@ -1,8 +1,11 @@
+import { Link } from "react-router-dom"
 
 
 const Lobby = () => {
     return (
-        <h1>Lobby</h1>
+        <div className="container-fluid d-flex justify-content-center">
+            <Link to={"/battle"}>Battle</Link>
+        </div>
     )
 }
 

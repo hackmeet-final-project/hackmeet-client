@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-const TimerSecond = ({seconds, coding, setCoding, ready, setReady }) => {
+const TimerSecond = ({seconds, coding, setCoding, startCoding, setStartCoding }) => {
   const [timer, setTimer] = useState(seconds)
   const timerId = useRef()
 
@@ -28,13 +28,15 @@ const TimerSecond = ({seconds, coding, setCoding, ready, setReady }) => {
   useEffect(() => {
     if(timer <= 0) {
       clearInterval(timerId.current)
-      if(ready) {
-        setReady(false)
+      if(startCoding) {
+        setStartCoding(false)
         setCoding(true)
       }
 
       if(coding) {
         setCoding(false)
+        // setGenerateCode(false)
+        // setReady(false)
       }
       console.log("timer done")
     }
