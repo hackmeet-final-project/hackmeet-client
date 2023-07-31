@@ -1,8 +1,6 @@
 import { Axios } from "../../../config/axios";
 import { FETCH_ALL_QUESTION, GENERATE_RANDOM_QUESTION, SET_QUESTION_LOADING } from "./actionType";
 
-const BASE_URL = " http://localhost:3000";
-
 export const fetchSuccess = (data) => {
   return { 
     type: FETCH_ALL_QUESTION,
@@ -25,16 +23,16 @@ export const generateQuestion = (number) => {
 export const fetchSoal = () => {
   return async(dispatch, getState) => {
     try {
-      const {data} = await Axios.get("/questions", {
+      const { data } = await Axios.get("/questions", {
         headers: {
           access_token: localStorage.access_token,
         },
       })
       dispatch(fetchSuccess(data));
+      dispatch(setQuestionLoading(false))
+      return data
     } catch (error) {
       console.log(error);
-    } finally {
-      dispatch(setQuestionLoading(false))
-    }
+    } 
   };
 };

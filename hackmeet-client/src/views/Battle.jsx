@@ -5,13 +5,18 @@ import Timer from '../components/Timer'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import Media from "../components/Media"
+import MatchFound from "../components/MatchFound"
 
 const Battle = () => {
     const [ready, setReady] = useState(false)
+    const [generateCode, setGenerateCode] = useState(false)
     const [startCoding, setStartCoding] = useState(false)
+    const [coding, setCoding] = useState(false)
     const [message, setMessage] = useState('')
     const [chats, setChats] = useState([])
+    const [hide, setHide] = useState(false)
     const mediaRef = useRef()
+    
     const dispatch = useDispatch()
     const soal = useSelector(state => {
       return state.soal.data
@@ -22,12 +27,18 @@ const Battle = () => {
 
     useEffect(() => {
       if(ready) {
-        console.log(ready, 'from useEffect Battle ')
         dispatch(fetchSoal())
         .then(soal => {
           const generateNumber = Math.ceil(Math.random() * soal.length)
           dispatch(generateQuestion(generateNumber))
-          setStartCoding(true)
+          setGenerateCode(true)
+          setHide(true)
+          setTimeout(() => {
+            setStartCoding(true)
+          }, 2000)
+          setTimeout(() => {
+            setHide(false)
+          }, 7000)
         })
         .catch(error => {
           console.log(error)
@@ -37,16 +48,17 @@ const Battle = () => {
 
     return (
       <div className="container-fluid w-100" style={{ height: "100vh" }}>
+        <MatchFound hide={hide} startCoding={startCoding}/>
         <div className="container gap-3 py-5 d-flex h-100">
           <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
-            <Timer ready={ready} setReady={setReady}/>
+            <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding}/>
             <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats}/>
             <div className='d-flex' style={{height: '50%'}}>
               <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
-                  {startCoding ? <CodeEditor soal={soal}/> : ''}
+                  {generateCode ? <CodeEditor soal={soal}/> : ''}
               </div>
               <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
-                  {startCoding ? 
+                  {generateCode ? 
                     <p className='text-dark fs-5' style={{textAlign: 'justify'}}>
                       {question}
                     </p> 
@@ -59,7 +71,7 @@ const Battle = () => {
                   }
                 <div className="d-flex position-absolute gap-1" style={{width: "230px", bottom: 10, right: 5}}>
                   <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--primary-color)"}} onClick={() => mediaRef.current.handleFindMatch()}>Find Match</button>
-                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--fourth-color)"}}>Leave</button>
+                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--fourth-color)"}} onClick={() => mediaRef.current.handleLeaveMatch()}>Leave</button>
                 </div>
               </div>
             </div>

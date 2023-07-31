@@ -1,12 +1,11 @@
 import Editor from "@monaco-editor/react";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function CodeEditor() {
   const [errorText, setErrorText] = useState();
   const [answer, setAnswer] = useState("");
-  const [passedTest, setPassedTest] = useState(0);
   const isLoading = useSelector((state) => {
     return state.soal.isLoading;
   });
@@ -55,13 +54,15 @@ export default function CodeEditor() {
       }
     });
 
-    setPassedTest(totalTestPassed);
-
     const msg = `Total Test Passed : ${totalTestPassed}\n
     Total Test Failed : ${totalTestFailed}`;
     if (totalTestPassed === totalTest) {
       Swal.fire("testing...", msg, "success");
-    } else Swal.fire("testing...", msg, "question");
+      // setGenerateCode(false)
+      // setReady(false)
+    } else {
+      Swal.fire("testing...", msg, "question")
+    };
   }
 
   if (isLoading) {

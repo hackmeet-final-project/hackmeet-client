@@ -1,21 +1,25 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react"
 import { io } from "socket.io-client"
 import { Peer } from "peerjs"
-const socket = io('http://localhost:3000')
+import { useNavigate } from "react-router-dom"
+
 // const socket = io('https://hackmeet.kresnativ8.site')
-const myPeer = new Peer()
 
 const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats}, ref) => {
   useImperativeHandle(ref, () => {
     return {
       handleFindMatch,
-      sendMessage
+      sendMessage,
+      handleLeaveMatch
     }
   })
-    let username = Math.random() * 100
+    const navigate = useNavigate()
+    const [username, setUsername] = useState(Math.random() * 10)
     const [localStream, setLocalStream] = useState('')
     const [peerId, setPeerId] = useState('')
     const [room, setRoom] = useState('')
+    const [myPeer] = useState(new Peer())
+    const [socket] = useState(io('http://localhost:3000'))
    
     const sendMessage = (event) => {
       event.preventDefault()
@@ -30,18 +34,30 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         console.log(`user find match`, peerId, 'from handleFindMatch')
         socket.emit("join-room", username, peerId)
       }
-    } 
+    }
+    const handleLeaveMatch = () => {
+      if(room) {
+        myPeer.destroy()
+        socket.emit("user-leave-room", room)
+        socket.close()
+      }
+      navigate("/lobby")
+    }
 
     useEffect(() => {
-      myPeer.on("open", id => setPeerId(id))
-
-      socket.on("timer-ready", () => {
-        setReady(true)
+      myPeer.on("open", id => {
+        setPeerId(id)
       })
 
-      socket.on("assign-room", room => {
-        setRoom(room)
-        console.log(username, `masuk ke room`, room, 'from socket.on assign-room')
+      socket.on("assign-room", battleRoom => {
+        if(!room) {
+          console.log(battleRoom, "ini yang di masukin", username)
+          setRoom(battleRoom)
+        }
+      })
+
+      socket.on("set-ready", () => {
+        setReady(true)
       })
 
       socket.on("receive-message", message => {
@@ -49,7 +65,9 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
           return prev = [...prev, {message, sender: false}]
         })
       })
-
+      socket.on("room-deleted", () => {
+        setRoom('')
+      })
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
       .then(stream => {
           setLocalStream(stream)
@@ -62,32 +80,46 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
           myPeer.on("call", call => {
             console.log(`ada telpon masuk`, stream, 'from myPeer.on call navigator')
             call.answer(stream)
+            if(call.open) {
+              socket.emit("players-ready", myPeer.id)
+            }
             call.on("stream", stream => {
                 const remoteVideo = document.getElementById("remote-video")
                 remoteVideo.srcObject = stream
+                remoteVideo.muted = true
                 remoteVideo.onloadedmetadata = () => remoteVideo.play()
             })
           })
       })
+      
     }, [])
 
     useEffect(() => {
       if(localStream) {
         socket.on("call-user", (peerID) => {
-            if(peerID !== peerId) {
-              const call = myPeer.call(peerID, localStream)
-              console.log(call)
-              call.on("stream", stream => {
-                  const remoteVideo = document.getElementById("remote-video")
-                  remoteVideo.srcObject = stream
-                  remoteVideo.onloadedmetadata = () => remoteVideo.play()
-                })
-              socket.emit("start-timer", peerID)
-              }
+          if(peerID !== peerId) {
+            const call = myPeer.call(peerID, localStream)
+            call.on("stream", stream => {
+                const remoteVideo = document.getElementById("remote-video")
+                remoteVideo.srcObject = stream
+                remoteVideo.muted = true
+                remoteVideo.onloadedmetadata = () => remoteVideo.play()
+            })
+            
+          }
         })
       }
-    }, [localStream])
+    }, [peerId])
 
+    window.onbeforeunload = (event) => {
+      const e = event || window.event;
+      e.preventDefault();
+      if(room) {
+        socket.emit("user-leave-room", room) 
+      }
+      
+      return socket.close()
+    };
     return (
       <div className='d-flex gap-2'style={{height: '40%'}}>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
