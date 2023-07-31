@@ -21,18 +21,18 @@ const Battle = () => {
     })
 
     useEffect(() => {
-      // if(ready) {
-      //   console.log(ready, 'from useEffect Battle ')
-      //   dispatch(fetchSoal())
-      //   .then(soal => {
-      //     const generateNumber = Math.ceil(Math.random() * soal.length)
-      //     dispatch(generateQuestion(generateNumber))
-      //     setStartCoding(true)
-      //   })
-      //   .catch(error => {
-      //     console.log(error)
-      //   })
-      // }
+      if(ready) {
+        console.log(ready, 'from useEffect Battle ')
+        dispatch(fetchSoal())
+        .then(soal => {
+          const generateNumber = Math.ceil(Math.random() * soal.length)
+          dispatch(generateQuestion(generateNumber))
+          setStartCoding(true)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      }
     }, [ready])
 
     return (
