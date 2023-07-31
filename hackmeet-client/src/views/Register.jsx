@@ -1,62 +1,69 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import { Link, useNavigate } from "react-router-dom";
+import { Axios } from "../config/axios";
+import { useToast } from "@chakra-ui/react"
+
+
 
 const Register = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const baseUrl = "http://localhost:3000"
+    const toast = useToast()
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const res = await fetch(baseUrl + "/users", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            })
-            if (res.ok) {
-                Swal.fire(
-                    'Success!',
-                    "Succes register!",
-                    'success'
-                )
-                navigate("/login")
-            } else {
-                const error = await res.json()
-                Swal.fire(
-                    'Ups!',
-                    error.message,
-                    'error'
-                )
-            }
+            const { data } = await Axios.post("/users", { email, password },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                toast({
+                    position: 'top',
+                    title: 'Register success!',
+                    description: "You can login now!",
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true,
+                })
+            navigate("/login")
         } catch (error) {
             console.log(error)
+            toast({
+                position: 'top',
+                title: 'Ups!',
+                description: error.response.data.message,
+                status: 'error',
+                duration: 2000,
+                isClosable: true,
+            })
         }
     }
 
     return (
-        <div className="container-fluid d-flex align-items-center justify-content-center" style={{height:"100vh"}}>
-                <div className="card rounded-5 border-2 border-secondary shadow-main w-25">
-                    <div className="card-body">
-                        <h2 className="mb-3 text-center fw-bold " >Registration</h2>
-                        <form action="" className="p-3" onSubmit={handleSubmit}>
-                            <br />
-                            <div className="form-group">
-                                <label htmlFor="" className="fw-bold">Email</label> <br />
-                                <input type="text" name="" placeholder="Input your email" className="form-control" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)}/>
-                            </div> <br />
-                            <div className="form-group">
-                                <label htmlFor="" className="fw-bold">Password</label> <br />
-                                <input type="password" name="" placeholder="Input your password" className="form-control" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)}/>
-                            </div> <br />
-                            <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary" style={{ backgroundColor: " #E86E7F" }} type="submit">Sign Up</button>
-                        </form>
-                    </div>
+        <div className="container-fluid d-flex align-items-center justify-content-center flex-column" style={{ height: "100vh" }}>
+            <div className="card rounded-5 border-2 border-secondary shadow-main w-25">
+                <div className="card-body">
+                    <h2 className="mb-2 text-center fw-bold " >Registration</h2>
+                    <form action="" className="px-3" onSubmit={handleSubmit}>
+                        <br />
+                        <div className="form-group">
+                            <label htmlFor="" className="fw-bold">Email</label> <br />
+                            <input type="text" name="" placeholder="Input your email" className="form-control" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} />
+                        </div> <br />
+                        <div className="form-group">
+                            <label htmlFor="" className="fw-bold">Password</label> <br />
+                            <input type="password" name="" placeholder="Input your password" className="form-control" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </div> <br />
+                        <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary button-hover"  style={{backgroundColor: "var(--fourth-color)"}}  type="submit">Sign Up</button>
+                        <p className="text-center">Already have an account? <Link className="text-primary" to="/login" > <u>Login</u></Link></p>
+
+                    </form>
                 </div>
+            </div>
         </div>
     )
 }

@@ -1,4 +1,5 @@
-import { GET_USER_PROFILE, SET_LOGIN } from "./actionType"
+import { Axios } from "../../../config/axios"
+import { GET_ALL_USER, GET_USER_PROFILE, LOADING_ALL_USER, SET_LOGIN } from "./actionType"
 
 export const setUserProfile = (payload) => {
     return {
@@ -14,28 +15,51 @@ export const setLogin = (payload) => {
     }
 }
 
+export const setAllProfiles = (payload) => {
+    return {
+        type: GET_ALL_USER,
+        payload
+    }
+}
+
+export const setLoadingAll = (payload) => {
+    return {
+        type: LOADING_ALL_USER,
+        payload
+    }
+}
+
 export const fetchUserProfile = () => {
-    return async(dispatch, getState) => {
-        return fetch("http://localhost/profiles", {
-            headers: {
-                access_token: localStorage.access_token
-            }
-        })
-        .then(response => {
-            if(!response.ok) {
-                return response.json().then(error => {
-                   throw new Error(error)}
-                )
-            }
-            return response.json()
-        })
-        .then(data => {
+    return async (dispatch, getState) => {
+        try {
+            const { data } = await Axios("/profiles", {
+                headers: {
+                    access_token: localStorage.access_token
+                }
+            })
             dispatch(setUserProfile(data))
-            return data
-        })
-        .catch(error => {
-            console.log(`data`)
-            throw(error)
-        })
+            // console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+}
+
+export const fetchAllUser = () => {
+    return async (dispatch, getState) => {
+        try {
+            const { data } = await Axios.get("/profiles/all", {
+                headers: {
+                    access_token: localStorage.access_token
+                },
+            })
+            dispatch(setAllProfiles(data))
+            // console.log(data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            dispatch(setLoadingAll(false));
+        }
     }
 }

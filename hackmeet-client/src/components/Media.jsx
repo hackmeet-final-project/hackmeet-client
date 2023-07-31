@@ -76,6 +76,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         socket.on("call-user", (peerID) => {
             if(peerID !== peerId) {
               const call = myPeer.call(peerID, localStream)
+              console.log(call)
               call.on("stream", stream => {
                   const remoteVideo = document.getElementById("remote-video")
                   remoteVideo.srcObject = stream

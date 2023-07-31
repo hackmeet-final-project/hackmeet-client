@@ -5,8 +5,8 @@ const App = () => {
 
   return (
     <>
-    <Logout/>
     <Outlet/>
+    <Logout/>
     <div id="background-wrap">
         <div className="x1">
             <div className="cloud"></div>

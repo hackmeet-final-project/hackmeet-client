@@ -1,8 +1,10 @@
-import { GET_USER_PROFILE, SET_LOGIN } from "../actions/user/actionType"
+import { GET_ALL_USER, GET_USER_PROFILE, LOADING_ALL_USER, SET_LOGIN } from "../actions/user/actionType"
 
 const initialState = {
-    profile: [],
-    isLogin: false
+    profile: {},
+    isLogin: false,
+    profiles: [],
+    loadingAll: true
 }
 
 const userReducer = (state = initialState, action) => {
@@ -17,6 +19,16 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 isLogin: action.payload
             }
+        case GET_ALL_USER:
+            return {
+                ...state,
+                profiles: action.payload
+            }
+        case LOADING_ALL_USER: 
+        return {
+            ...state,
+            loadingAll: action.payload
+        }
         default:
             return state
     }

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 
 
 const Logout = () => {
@@ -5,7 +6,7 @@ const Logout = () => {
         localStorage.clear()
     }
     return (
-        <button className="btn btn-secondary" onClick={handleLogout}>Logout</button>
+        <Link to="/login" className="btn btn-secondary position-absolute" onClick={handleLogout}>Logout</Link>
     )
 }
 
