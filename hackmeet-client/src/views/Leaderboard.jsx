@@ -77,7 +77,7 @@ const Leaderboard = () => {
           </div>
         </div>
       </div>
-      <Link onClick={play} to="/lobby" class="bi bi-caret-left-square-fill mt-3 fs-2 px-3 naik"
+      <Link onClick={play} to="/lobby" className="bi bi-caret-left-square-fill mt-3 fs-2 px-3 naik"
         style={{ color: "var(--third-color)"}}>
        <span className="mx-3">Back to lobby</span>
       </Link>

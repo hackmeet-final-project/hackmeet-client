@@ -1,9 +1,11 @@
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react"
+import { useState, useEffect, forwardRef, useImperativeHandle, useContext } from "react"
 import { Peer } from "peerjs"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { updateMMR } from "../store/actions/user/actionCreator"
 import socket from "../config/socket"
+import Disaster from "./Disaster"
+import ShakeContext from "../context/ShakeContext"
 
 const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats, setCoding, setGenerateCode}, ref) => {
   useImperativeHandle(ref, () => {
@@ -15,6 +17,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       handleSetWinner
     }
   })
+    const { animationName, animationCount, setShake, shake } = useContext(ShakeContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [username, setUsername] = useState(Math.random() * 10)
@@ -54,6 +57,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     const handleSetWinner = () => {
       socket.emit("winner", room, peerId)
     }
+
     // useEffect 
     useEffect(() => {
       myPeer.on("open", id => {
@@ -145,9 +149,16 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       }
       return () => {socket.removeAllListeners("winner-result")}
     }, [peerId])
+
+    useEffect(() => {
+      return () => {
+        socket.removeAllListeners()
+      }
+    }, [shake])
    
     return (
-      <div className='d-flex gap-2'style={{height: '40%'}}>
+      <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 9000}}>
+        <Disaster setShake={setShake}/>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
         </div>

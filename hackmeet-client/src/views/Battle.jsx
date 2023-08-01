@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchSoal, generateQuestion } from '../store/actions/question/actionCreator'
 import Timer from '../components/Timer'
@@ -9,8 +9,10 @@ import MatchFound from "../components/MatchFound"
 import useSound from 'use-sound';
 import popSound from "../audio/popSound.mp3"
 import openSound from "../audio/openSound.mp3"
+import ShakeContext from "../context/ShakeContext"
 
 const Battle = () => {
+  const  {animationName, animationCount} = useContext(ShakeContext)
   const [play] = useSound(popSound);
   const [play2] = useSound(openSound);
   const [ready, setReady] = useState(false)
@@ -61,14 +63,14 @@ const Battle = () => {
   }, [ready])
 
     return (
-      <div className="container-fluid w-100" style={{ height: "100vh" }}>
+      <div className="container-fluid w-100" style={{ height: "100vh", animation: animationName, animationIterationCount: animationCount}}>
         <MatchFound hide={hide} startCoding={startCoding}/>
         <div className="container gap-3 py-5 d-flex h-100">
           <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
             <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding} getDraw={getDraw}/>
             <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats} setGenerateCode={setGenerateCode} setCoding={setCoding}/>
             <div className='d-flex' style={{height: '50%'}}>
-              <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
+              <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4 bg-white" style={{border: '3px solid white', boxShadow: "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"}}>
                   {generateCode ? <CodeEditor getWinner={getWinner}/> : ''}
               </div>
               <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>

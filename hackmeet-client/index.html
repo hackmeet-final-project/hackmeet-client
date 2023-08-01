@@ -36,7 +36,7 @@
       opacity: 0.85; 
     }
 
-    img:hover {
+    .img-shake:hover {
       animation: shake 0.5s;
       animation-iteration-count: infinite;
     }
@@ -55,7 +55,7 @@
       transition: all 0.3s;
       transform-origin: center
     }
-
+    
     .naik:hover {
       transform: scale(1.05);
     }
@@ -69,6 +69,15 @@
       color: black;
       background-color: var(--secondary-color);
       transform: scale(1.17);
+    }
+
+    #dont-press {
+      transition: all 0.2s;
+      transform-origin: center
+    }
+
+    #dont-press:active {
+      transform: scale(0.9);
     }
 
     #chat-container::-webkit-scrollbar {
