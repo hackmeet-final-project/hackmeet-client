@@ -8,7 +8,7 @@ import openSound from "../audio/openSound.mp3"
 
 const Lobby = () => {
     const dispatch = useDispatch()
-    const [play, { stop }] = useSound(openSound);
+    const [play] = useSound(openSound);
 
     const profile = useSelector((state) => {
         return state.user.profile
@@ -22,13 +22,18 @@ const Lobby = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center flex-column" style={{ height: "100vh" }}>
-            <Navbar />
             <div className="d-flex justify-content-center align-items-center">
                 <img src="https://i.imgur.com/P8Sv3Ek.png" className="w-25 mb-3 mt-3" />
             </div>
-            <div className="d-flex flex-column" style={{ width: "20%" }}>
-                <Link to="/leaderboard" type="button" onClick={play} className="btn rounded-1 m-2 shadow-secondary button-hover" style={{ backgroundColor: "var(--secondary-color)" }}>Leaderboard</Link>
-                <Link to="/battle" type="button" onClick={play} className="btn rounded-1 m-2 shadow-secondary button-hover" style={{ backgroundColor: "var(--secondary-color)" }}>Find Match</Link>
+            <Navbar />
+            <div className="d-flex justify-content-center align-items-center flex-column">
+                <div className="d-flex justify-content-center align-items-center">
+                    <img src="https://i.imgur.com/w5QcAxK.png" className="w-25" />
+                </div>
+                <div className="d-flex flex-column" style={{ width: "20%" }}>
+                    <Link to="/leaderboard" type="button" onClick={play} className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Leaderboard</Link>
+                    <Link to="/battle" type="button" onClick={play} className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Find Match</Link>
+                </div>
             </div>
         </div>
     )

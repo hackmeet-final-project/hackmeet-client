@@ -21,7 +21,6 @@ const Battle = () => {
   const [chats, setChats] = useState([])
   const [hide, setHide] = useState(false)
   const mediaRef = useRef()
-
   const dispatch = useDispatch()
   const soal = useSelector(state => {
     return state.soal.data
@@ -29,10 +28,20 @@ const Battle = () => {
   const question = useSelector(state => {
     return state.soal.question
   })
+    const getDraw = () => {
+      setGenerateCode(false)
+      setReady(false)
+      mediaRef.current.handleGameDraw()
+    }
 
-  useEffect(() => {
-    if (ready) {
-      dispatch(fetchSoal())
+    const getWinner = () => {
+      
+      mediaRef.current.handleSetWinner()
+    }
+
+    useEffect(() => {
+      if(ready) {
+        dispatch(fetchSoal())
         .then(soal => {
           const generateNumber = Math.ceil(Math.random() * soal.length)
           dispatch(generateQuestion(generateNumber))
@@ -51,29 +60,33 @@ const Battle = () => {
     }
   }, [ready])
 
-  return (
-    <div className="container-fluid w-100" style={{ height: "100vh" }}>
-      <MatchFound hide={hide} startCoding={startCoding} />
-      <div className="container gap-3 py-5 d-flex h-100">
-        <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
-          <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding} />
-          <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats} />
-          <div className='d-flex' style={{ height: '50%' }}>
-            <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4" style={{ border: '3px solid white' }}>
-              {generateCode ? <CodeEditor soal={soal} /> : ''}
-            </div>
-            <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{ border: '3px solid white', background: 'var(--secondary-color)' }}>
-              {generateCode ?
-                <p className='text-dark fs-5' style={{ textAlign: 'justify' }}>
-                  {question}
-                </p>
-                :
-                <div className="position-relative d-flex align-items-center justify-content-center">
-                  <i className="bi bi-question position-absolute display-1"></i>
-                  <i className="bi bi-cloud-fill text-white" style={{ fontSize: '300px', textShadow: "3px 4px 10px rgba(0, 0, 0, 0.57)" }}>
-                  </i>
+    return (
+      <div className="container-fluid w-100" style={{ height: "100vh" }}>
+        <MatchFound hide={hide} startCoding={startCoding}/>
+        <div className="container gap-3 py-5 d-flex h-100">
+          <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
+            <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding} getDraw={getDraw}/>
+            <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats} setGenerateCode={setGenerateCode} setCoding={setCoding}/>
+            <div className='d-flex' style={{height: '50%'}}>
+              <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
+                  {generateCode ? <CodeEditor getWinner={getWinner}/> : ''}
+              </div>
+              <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
+                  {generateCode ? 
+                    <p className='text-dark fs-5' style={{textAlign: 'justify'}}>
+                      {question}
+                    </p> 
+                    : 
+                    <div className="position-relative d-flex align-items-center justify-content-center">
+                      <i className="bi bi-question position-absolute display-1"></i>
+                      <i className="bi bi-cloud-fill text-white" style={{fontSize: '300px', textShadow: "3px 4px 10px rgba(0, 0, 0, 0.57)"}}>
+                      </i>
+                    </div> 
+                  }
+                <div className="d-flex position-absolute gap-1" style={{width: "230px", bottom: 10, right: 5}}>
+                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--primary-color)"}} onClick={() => mediaRef.current.handleFindMatch()}>Find Match</button>
+                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--fourth-color)"}} onClick={() => mediaRef.current.handleLeaveMatch()}>Leave</button>
                 </div>
-              }
               <div className="d-flex position-absolute gap-1" style={{ width: "230px", bottom: 10, right: 5 }}>
                 <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{ backgroundColor: "var(--primary-color)" }} onClick={() => {
                   mediaRef.current.handleFindMatch();

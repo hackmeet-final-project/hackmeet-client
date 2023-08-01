@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-export default function CodeEditor() {
+export default function CodeEditor({getWinner}) {
   const [errorText, setErrorText] = useState();
   const [answer, setAnswer] = useState("");
   const isLoading = useSelector((state) => {
@@ -19,7 +19,6 @@ export default function CodeEditor() {
   })
 
   function handleEditorChange(value) {
-    console.log("here is the current model value:", value);
     setAnswer(value);
   }
 
@@ -34,8 +33,6 @@ export default function CodeEditor() {
     const functionBody = answer.slice(firstBracketIndex + 1, lastBracketIndex);
     let answerFunction = Function(...functionParam, functionBody);
 
-    console.log(defaultAnswer)
-
     let totalTest = testCases.length;
     let totalTestPassed = 0;
     let totalTestFailed = Math.abs(totalTest - totalTestPassed);
@@ -48,7 +45,6 @@ export default function CodeEditor() {
       } catch (error) {
         setErrorText(error.message);
       }
-      console.log(test, test.answer, "---", result);
       if (test.answer === result) {
         totalTestPassed++;
       }
@@ -58,8 +54,7 @@ export default function CodeEditor() {
     Total Test Failed : ${totalTestFailed}`;
     if (totalTestPassed === totalTest) {
       Swal.fire("testing...", msg, "success");
-      // setGenerateCode(false)
-      // setReady(false)
+      getWinner()
     } else {
       Swal.fire("testing...", msg, "question")
     };
