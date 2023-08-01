@@ -1,6 +1,8 @@
-
+import useSound from 'use-sound';
+import popSound2 from "../audio/popSound2.mp3"
 
 const Chat = ({sendMessage, setMessage, message, chats}) => {
+    const [play] = useSound(popSound2);
 
     const handleFormChange = (event) => {
         setMessage(event.target.value)
@@ -20,7 +22,7 @@ const Chat = ({sendMessage, setMessage, message, chats}) => {
         </div>
         <form className="d-flex position-absolute" style={{bottom: 5, width: "95%"}} onSubmit={sendMessage}>
             <input type="text" className="form-control shadow-main" value={message} onChange={handleFormChange}/>
-            <button type="submit" className="btn button-hover text-white shadow-main" style={{backgroundColor: "var(--third-color"}}>Send</button>
+            <button onClick={play} type="submit" className="btn button-hover text-white shadow-main" style={{backgroundColor: "var(--third-color"}}>Send</button>
         </form>
         </>
     )

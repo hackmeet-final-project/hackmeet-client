@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Axios } from "../config/axios";
 import { useToast } from "@chakra-ui/react"
-
+import useSound from 'use-sound';
+import openSound from "../audio/openSound.mp3"
 
 const Login = () => {
     const toast = useToast()
+    const [play] = useSound(openSound);
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -13,15 +15,15 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const { data } = await Axios.post("/users/login",{
+            const { data } = await Axios.post("/users/login", {
                 email,
                 password,
-              }, 
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
+            },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
             localStorage.access_token = data.access_token
             toast({
                 position: 'top',
@@ -69,9 +71,9 @@ const Login = () => {
                             <label htmlFor="" className="fw-bold">Password</label> <br />
                             <input type="password" name="" placeholder="Input your password" className="form-control" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)} />
                         </div> <br />
-                        <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary button-hover" style={{ backgroundColor: "var(--fourth-color)" }} type="submit">Sign In</button>
+                        <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary button-hover" style={{ backgroundColor: "var(--fourth-color)" }} type="submit" onClick={play}>Sign In</button>
                         <p className="text-center">Dont have an account? <Link className="text-primary" to="/register" > <u>Register</u></Link>  </p>
-                        
+
                     </form>
                 </div>
             </div>

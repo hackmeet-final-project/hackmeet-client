@@ -3,9 +3,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUser } from "../store/actions/user/actionCreator";
 import { Link } from "react-router-dom";
+import useSound from 'use-sound';
+import popSound from "../audio/popSound.mp3"
 
 const Leaderboard = () => {
   const dispatch = useDispatch()
+  const [play] = useSound(popSound);
 
   const profiles = useSelector((state) => {
     return state.user.profiles
@@ -29,7 +32,7 @@ const Leaderboard = () => {
   }
   return (
     <div style={{ height: "100vh" }} >
-      <Link to="/lobby" class="bi bi-caret-left-square-fill p-2 mx-2 fs-2" style={{color: "var(--third-color)"}}></Link>
+      <Link onClick={play} to="/lobby" class="bi bi-caret-left-square-fill p-2 mx-2 fs-2" style={{ color: "var(--third-color)" }}></Link>
       <div className="d-flex justify-content-center align-items-center flex-column">
         <h6 className="display-6 fw-bold text-muted text-center">LEADERBOARD</h6>
         <div className="container-leaderboard">

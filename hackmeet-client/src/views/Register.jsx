@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Axios } from "../config/axios";
 import { useToast } from "@chakra-ui/react"
-
-
+import useSound from 'use-sound';
+import openSound from "../audio/openSound.mp3"
 
 const Register = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const toast = useToast()
+    const [play] = useSound(openSound);
 
 
     const handleSubmit = async (e) => {
@@ -58,9 +59,8 @@ const Register = () => {
                             <label htmlFor="" className="fw-bold">Password</label> <br />
                             <input type="password" name="" placeholder="Input your password" className="form-control" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)} />
                         </div> <br />
-                        <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary button-hover"  style={{backgroundColor: "var(--fourth-color)"}}  type="submit">Sign Up</button>
+                        <button onClick={play} className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary button-hover"  style={{backgroundColor: "var(--fourth-color)"}}  type="submit">Sign Up</button>
                         <p className="text-center">Already have an account? <Link className="text-primary" to="/login" > <u>Login</u></Link></p>
-
                     </form>
                 </div>
             </div>

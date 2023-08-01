@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
-
+import useSound from 'use-sound';
+import drumSound from "../audio/drumSound.mp3"
 
 const MatchFound = ({hide, startCoding}) => {
     const [display, setDisplay] = useState("none")
+    const [play] = useSound(drumSound);
 
     useEffect(() => {
         if(hide) {
             setDisplay("flex")
+            play()
         } else {
             setDisplay("none")
         }

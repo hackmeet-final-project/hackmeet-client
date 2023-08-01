@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Axios } from "../config/axios";
 import { useToast } from "@chakra-ui/react"
-
+import useSound from 'use-sound';
+import openSound from "../audio/openSound.mp3"
 
 const CreateProfile = () => {
     const navigate = useNavigate()
     const toast = useToast()
+    const [play] = useSound(openSound);
     const [lastName, setlastName] = useState("")
     const [firstName, setfirstName] = useState("")
     const [hacktivId, setHacktivId] = useState("")
@@ -73,7 +75,7 @@ const CreateProfile = () => {
                                 <option value="Instructor">Instructor</option>
                             </select>
                         </div> <br />
-                        <button className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary" style={{ backgroundColor: " #E86E7F" }} type="submit">Submit</button>
+                        <button onClick={play} className="btn w-100 rounded-pill mb-3 text-white fw-bold shadow-secondary" style={{ backgroundColor: " #E86E7F" }} type="submit">Submit</button>
                     </form>
                 </div>
             </div>
