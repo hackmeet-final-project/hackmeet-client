@@ -1,12 +1,11 @@
 import { Outlet } from 'react-router-dom'
-import Logout from './components/Logout'
+
 
 const App = () => {
 
   return (
     <>
     <Outlet/>
-    <Logout/>
     <div id="background-wrap">
         <div className="x1">
             <div className="cloud"></div>
