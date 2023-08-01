@@ -24,15 +24,11 @@ const Battle = () => {
   const [hide, setHide] = useState(false)
   const mediaRef = useRef()
   const dispatch = useDispatch()
-  const soal = useSelector(state => {
-    return state.soal.data
-  })
   const question = useSelector(state => {
     return state.soal.question
   })
     const getDraw = () => {
       setGenerateCode(false)
-      setReady(false)
       mediaRef.current.handleGameDraw()
     }
 
@@ -45,7 +41,7 @@ const Battle = () => {
       if(ready) {
         dispatch(fetchSoal())
         .then(soal => {
-          const generateNumber = Math.ceil(Math.random() * soal.length)
+          const generateNumber = Math.floor(Math.random() * soal.length)
           dispatch(generateQuestion(generateNumber))
           setGenerateCode(true)
           setHide(true)

@@ -16,7 +16,7 @@ const MatchFound = ({hide, startCoding}) => {
     }, [hide])
 
     return (
-        <div className="container-fluid position-absolute" id="match-found-container" style={{display}}>
+        <div className="container-fluid position-absolute" id="match-found-container" style={{display, zIndex: 1020}}>
             <div className="d-flex justify-content-center align-items-center position-absolute" id="match-found">
                 <h1 className="display-2 fw-bolder">{startCoding ? "Get Ready" : "Match Found"}</h1>
             </div>

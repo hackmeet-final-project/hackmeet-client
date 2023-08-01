@@ -35,6 +35,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     }
     const handleFindMatch = () => {
       if(!room) {
+        setReady(false)
         console.log(`user find match`, peerId, 'from handleFindMatch')
         socket.emit("join-room", username, peerId)
       }
@@ -69,6 +70,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       })
 
       socket.on("set-ready", () => {
+        console.log(`setReady`)
         setReady(true)
       })
 
@@ -86,6 +88,10 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         setRoom('')
       })
 
+      socket.on("receive-shake", shake => {
+        setShake(shake)
+      })
+
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
       .then(stream => {
           setLocalStream(stream)
@@ -99,6 +105,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
             console.log(`ada telpon masuk`, stream, 'from myPeer.on call navigator')
             call.answer(stream)
             if(call.open) {
+              console.log(call.peer)
               socket.emit("players-ready", myPeer.id)
             }
             call.on("stream", stream => {
@@ -122,6 +129,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
 
     useEffect(() => {
       if(localStream) {
+        console.log(peerId)
         socket.on("call-user", (peerID) => {
           if(peerID !== peerId) {
             const call = myPeer.call(peerID, localStream)
@@ -137,7 +145,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       if(peerId) {
         socket.on("winner-result", (winner) => {
           setGenerateCode(false)
-          setReady(false)
           setCoding(false)
           setRoom('')
           if(peerId === winner) {
@@ -151,13 +158,19 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     }, [peerId])
 
     useEffect(() => {
+      if(shake) {
+        socket.emit("send-shake", room, true)
+      } else {
+        socket.emit("send-shake", room, false)
+      }
+
       return () => {
         socket.removeAllListeners()
       }
     }, [shake])
    
     return (
-      <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 9000}}>
+      <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
         <Disaster setShake={setShake}/>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
