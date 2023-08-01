@@ -65,7 +65,7 @@ const Login = () => {
                         <br />
                         <div className="form-group">
                             <label htmlFor="" className="fw-bold">Email</label> <br />
-                            <input type="text" name="" placeholder="Input your email" className="form-control" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <input type="text" name="" placeholder="Input your email" className="form-control" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} tabIndex="1"/>
                         </div> <br />
                         <div className="form-group">
                             <label htmlFor="" className="fw-bold">Password</label> <br />
