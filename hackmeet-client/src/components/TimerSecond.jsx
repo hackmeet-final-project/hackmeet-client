@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-const TimerSecond = ({seconds, coding, setCoding, startCoding, setStartCoding }) => {
+const TimerSecond = ({seconds, coding, setCoding, startCoding, setStartCoding, getDraw }) => {
   const [timer, setTimer] = useState(seconds)
   const timerId = useRef()
 
@@ -34,9 +34,9 @@ const TimerSecond = ({seconds, coding, setCoding, startCoding, setStartCoding })
       }
 
       if(coding) {
+        console.log(`dari timer <<<<<<<`)
         setCoding(false)
-        // setGenerateCode(false)
-        // setReady(false)
+        getDraw()
       }
       console.log("timer done")
     }

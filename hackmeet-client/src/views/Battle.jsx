@@ -25,6 +25,17 @@ const Battle = () => {
       return state.soal.question
     })
 
+    const getDraw = () => {
+      setGenerateCode(false)
+      setReady(false)
+      mediaRef.current.handleGameDraw()
+    }
+
+    const getWinner = () => {
+      
+      mediaRef.current.handleSetWinner()
+    }
+
     useEffect(() => {
       if(ready) {
         dispatch(fetchSoal())
@@ -51,11 +62,11 @@ const Battle = () => {
         <MatchFound hide={hide} startCoding={startCoding}/>
         <div className="container gap-3 py-5 d-flex h-100">
           <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
-            <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding}/>
-            <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats}/>
+            <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding} getDraw={getDraw}/>
+            <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats} setGenerateCode={setGenerateCode} setCoding={setCoding}/>
             <div className='d-flex' style={{height: '50%'}}>
               <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4" style={{border: '3px solid white'}}>
-                  {generateCode ? <CodeEditor soal={soal}/> : ''}
+                  {generateCode ? <CodeEditor getWinner={getWinner}/> : ''}
               </div>
               <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
                   {generateCode ? 

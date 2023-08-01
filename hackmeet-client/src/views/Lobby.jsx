@@ -29,8 +29,9 @@ const Lobby = () => {
                     <img src="https://i.imgur.com/w5QcAxK.png" className="w-25" />
                 </div>
                 <div className="d-flex flex-column" style={{ width: "20%" }}>
-                    <Link to="/leaderboard" type="button" className="btn rounded-1 m-2 shadow-secondary button-hover" style={{ backgroundColor: "var(--secondary-color)" }}>Leaderboard</Link>
-                    <Link to="/battle" type="button" className="btn rounded-1 m-2 shadow-secondary button-hover" style={{ backgroundColor: "var(--secondary-color)" }}>Find Match</Link>
+                    <Link to="/leaderboard" type="button" className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Leaderboard</Link>
+                    <Link to="/battle" type="button" className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Find Match</Link>
+                    <Link to="/battle" type="button" className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Find Match</Link>
                 </div>
             </div>
         </div>

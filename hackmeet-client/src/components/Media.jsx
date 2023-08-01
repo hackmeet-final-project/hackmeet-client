@@ -1,26 +1,27 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react"
-import { io } from "socket.io-client"
 import { Peer } from "peerjs"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { updateMMR } from "../store/actions/user/actionCreator"
+import socket from "../config/socket"
 
-// const socket = io('https://hackmeet.kresnativ8.site')
-
-const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats}, ref) => {
+const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats, setCoding, setGenerateCode}, ref) => {
   useImperativeHandle(ref, () => {
     return {
       handleFindMatch,
       sendMessage,
-      handleLeaveMatch
+      handleLeaveMatch,
+      handleGameDraw,
+      handleSetWinner
     }
   })
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [username, setUsername] = useState(Math.random() * 10)
     const [localStream, setLocalStream] = useState('')
     const [peerId, setPeerId] = useState('')
     const [room, setRoom] = useState('')
     const [myPeer] = useState(new Peer())
-    const [socket] = useState(io('http://localhost:3000'))
-   
     const sendMessage = (event) => {
       event.preventDefault()
         if(ready && message) {
@@ -36,24 +37,31 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       }
     }
     const handleLeaveMatch = () => {
+      if(ready) {
+        confirm("Are you sure? Your mmr will be decresead")
+      }
       if(room) {
         myPeer.destroy()
         socket.emit("user-leave-room", room)
-        socket.close()
       }
       navigate("/lobby")
     }
 
+    const handleGameDraw = () => {
+      socket.emit("draw", room)
+    }
+
+    const handleSetWinner = () => {
+      socket.emit("winner", room, peerId)
+    }
+    // useEffect 
     useEffect(() => {
       myPeer.on("open", id => {
         setPeerId(id)
       })
 
       socket.on("assign-room", battleRoom => {
-        if(!room) {
-          console.log(battleRoom, "ini yang di masukin", username)
           setRoom(battleRoom)
-        }
       })
 
       socket.on("set-ready", () => {
@@ -65,9 +73,15 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
           return prev = [...prev, {message, sender: false}]
         })
       })
+      socket.on("draw-result", () => {
+        dispatch(updateMMR("-10"))
+        setRoom('')
+      })
+
       socket.on("room-deleted", () => {
         setRoom('')
       })
+
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
       .then(stream => {
           setLocalStream(stream)
@@ -91,7 +105,15 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
             })
           })
       })
-      
+
+      window.onbeforeunload = (event) => {
+        const e = event || window.event;
+        e.preventDefault();
+        if(room) {
+          socket.emit("user-leave-room", room) 
+        }
+      };
+      return () => {socket.removeAllListeners()}
     }, [])
 
     useEffect(() => {
@@ -105,21 +127,25 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
                 remoteVideo.muted = true
                 remoteVideo.onloadedmetadata = () => remoteVideo.play()
             })
-            
           }
         })
       }
-    }, [peerId])
-
-    window.onbeforeunload = (event) => {
-      const e = event || window.event;
-      e.preventDefault();
-      if(room) {
-        socket.emit("user-leave-room", room) 
+      if(peerId) {
+        socket.on("winner-result", (winner) => {
+          setGenerateCode(false)
+          setReady(false)
+          setCoding(false)
+          setRoom('')
+          if(peerId === winner) {
+            dispatch(updateMMR("+20"))
+          } else {
+            dispatch(updateMMR("-20"))
+          }
+        })
       }
-      
-      return socket.close()
-    };
+      return () => {socket.removeAllListeners("winner-result")}
+    }, [peerId])
+   
     return (
       <div className='d-flex gap-2'style={{height: '40%'}}>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>

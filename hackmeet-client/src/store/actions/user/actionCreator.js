@@ -55,11 +55,30 @@ export const fetchAllUser = () => {
                 },
             })
             dispatch(setAllProfiles(data))
-            // console.log(data)
         } catch (error) {
-            console.log(error)
+            throw(error)
         } finally {
             dispatch(setLoadingAll(false));
+        }
+    }
+}
+
+export const updateMMR = (input) => {
+    return async (dispatch, getState) => {
+        try {
+            const { data } = await Axios.patch("/profiles", 
+                {
+                    input, 
+                },
+                {
+                    headers: {
+                        access_token: localStorage.access_token
+                    }
+                }
+            )
+            console.log(data)
+        } catch (error) {
+            throw(error)
         }
     }
 }
