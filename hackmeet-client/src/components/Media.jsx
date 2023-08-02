@@ -36,14 +36,10 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     const handleFindMatch = () => {
       if(!room) {
         setReady(false)
-        console.log(`user find match`, peerId, 'from handleFindMatch')
         socket.emit("join-room", username, peerId)
       }
     }
     const handleLeaveMatch = () => {
-      if(ready) {
-        confirm("Are you sure? Your mmr will be decresead")
-      }
       if(room) {
         myPeer.destroy()
         socket.emit("user-leave-room", room)
@@ -86,10 +82,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
 
       socket.on("room-deleted", () => {
         setRoom('')
-      })
-
-      socket.on("receive-shake", shake => {
-        setShake(shake)
       })
 
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
@@ -164,11 +156,14 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         socket.emit("send-shake", room, false)
       }
 
+      socket.on("receive-shake", shake => {
+        setShake(shake)
+      })
+
       return () => {
         socket.removeAllListeners()
       }
     }, [shake])
-   
     return (
       <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
         <Disaster setShake={setShake}/>
