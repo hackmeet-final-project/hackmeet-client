@@ -170,7 +170,8 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
         </div>
-        <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
+        <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden position-relative" style={{border: '3px solid white'}}>
+          {!ready && <img className="position-absolute" style={{width:"100%"}} src="https://media.tenor.com/BiPileueKYwAAAAC/stickman-fight.gif"></img>}
           <video src="" id="remote-video" className='w-100'></video>
         </div>
       </div>

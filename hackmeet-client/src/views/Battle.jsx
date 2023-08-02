@@ -24,6 +24,11 @@ const Battle = () => {
   const [hide, setHide] = useState(false)
   const mediaRef = useRef()
   const dispatch = useDispatch()
+  
+  const profile = useSelector((state) => {
+    return state.user.profile
+  })
+
   const question = useSelector(state => {
     return state.soal.question
   })
@@ -67,7 +72,7 @@ const Battle = () => {
             <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats} setGenerateCode={setGenerateCode} setCoding={setCoding}/>
             <div className='d-flex' style={{height: '50%'}}>
               <div className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4 bg-white" style={{border: '3px solid white', boxShadow: "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"}}>
-                  {generateCode ? <CodeEditor getWinner={getWinner}/> : ''}
+                  {generateCode ? <CodeEditor getWinner={getWinner}/> : ""}
               </div>
               <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
                   {generateCode ? 

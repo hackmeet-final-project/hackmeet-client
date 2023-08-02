@@ -24,7 +24,7 @@ const Lobby = () => {
         <div className="d-flex justify-content-center align-items-center flex-column" style={{ height: "100vh" }}>
             <Navbar />
             <div className="d-flex justify-content-center align-items-center">
-                <img src="https://i.imgur.com/P8Sv3Ek.png" className="mb-3 mt-3" style={{width: "50%"}}/>
+                <img src="https://i.imgur.com/P8Sv3Ek.png" className="mb-3 mt-3 img-shake" style={{width: "50%"}}/>
             </div>
             <div className="d-flex flex-column" style={{ width: "22%", height: "20%" }}>
                 <Link to="/leaderboard" type="button" onClick={play} className="d-flex align-items-center justify-content-center btn rounded-5 m-2 shadow-secondary h-50 naik" style={{ backgroundColor: "var(--secondary-color)" }}>
