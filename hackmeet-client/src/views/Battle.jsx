@@ -27,6 +27,11 @@ const Battle = () => {
   const [hide, setHide] = useState(false);
   const mediaRef = useRef();
   const dispatch = useDispatch();
+
+  const profile = useSelector((state) => {
+    return state.user.profile;
+  });
+
   const question = useSelector((state) => {
     return state.soal.question;
   });
@@ -90,16 +95,24 @@ const Battle = () => {
             setGenerateCode={setGenerateCode}
             setCoding={setCoding}
           />
-          <div className="d-flex" style={{ height: "50%" }}>
+          <div className="d-flex" style={{ height: "60%" }}>
             <div
-              className="h-100 w-50 shadow-main d-flex flex-column overflow-hidden rounded-start-4 bg-white"
+              className="h-100 w-50 shadow-main d-flex flex-column align-items-center justify-content-center overflow-hidden rounded-start-4 bg-white"
               style={{
                 border: "3px solid white",
                 boxShadow:
                   "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset",
               }}
             >
-              {generateCode ? <CodeEditor getWinner={getWinner} /> : ""}
+              {generateCode ? (
+                <CodeEditor getWinner={getWinner} />
+              ) : (
+                <img
+                  src="https://i.imgur.com/P8Sv3Ek.png"
+                  className="mb-3 mt-3 img-shake"
+                  style={{ width: "70%" }}
+                />
+              )}
             </div>
             <div
               className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5"

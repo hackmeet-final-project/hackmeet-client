@@ -36,7 +36,7 @@ const Leaderboard = () => {
             <div className="leader" key={leader.id}>
               {index + 1 <= 3 && (
                 <div className="">
-                  <img
+                  <img className="img-shake"
                     style={{ minWidth: "128px" }}
                     src={
                       index === 0

@@ -24,11 +24,15 @@ const Lobby = () => {
         <div className="d-flex justify-content-center align-items-center flex-column" style={{ height: "100vh" }}>
             <Navbar />
             <div className="d-flex justify-content-center align-items-center">
-                <img src="https://i.imgur.com/P8Sv3Ek.png" className="w-25 mb-3 mt-3" />
+                <img src="https://i.imgur.com/P8Sv3Ek.png" className="mb-3 mt-3 img-shake" style={{width: "50%"}}/>
             </div>
-            <div className="d-flex flex-column" style={{ width: "20%" }}>
-                <Link to="/leaderboard" type="button" onClick={play} className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Leaderboard</Link>
-                <Link to="/battle" type="button" onClick={play} className="btn rounded-1 m-2 shadow-secondary naik" style={{ backgroundColor: "var(--secondary-color)" }}>Find Match</Link>
+            <div className="d-flex flex-column" style={{ width: "22%", height: "20%" }}>
+                <Link to="/leaderboard" type="button" onClick={play} className="d-flex align-items-center justify-content-center btn rounded-5 m-2 shadow-secondary h-50 naik" style={{ backgroundColor: "var(--secondary-color)" }}>
+                    <span className="fs-4">Leaderboard</span>
+                </Link>
+                <Link to="/battle" type="button" onClick={play} className="d-flex align-items-center justify-content-center btn rounded-5 m-2 shadow-secondary h-50 naik" style={{ backgroundColor: "var(--secondary-color)" }}>
+                    <span className="fs-4">Battle</span>
+                </Link>
             </div>
         </div>
     )

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useToast } from "@chakra-ui/react"
 import useSound from 'use-sound';
 import popSound from "../audio/popSound.mp3"
+import ProfileIcon from "./ProfileIcon"
 
 
 const Navbar = () => {
@@ -35,14 +36,17 @@ const Navbar = () => {
 
     return (
         <div className="d-flex justify-content-between fixed-top px-5 py-4 ">
-            <div className=" flex-column">
-                <h4 className=" fw-bold text-muted">Username: {profile.firstName}</h4>
-                <h4 className=" fw-bold text-muted">MMR: {profile.mmr}</h4>
+            <div className="d-flex align-items-center gap-3">
+                <ProfileIcon/>
+                <div className=" flex-column">
+                    <h4 className=" fw-bold shadow14">Username: {profile.firstName}</h4>
+                    <h4 className=" fw-bold shadow14">MMR: {profile.mmr}</h4>
+                </div>
             </div>
             <div className="flex-column">
-            <h5 className="fw-bold text-muted"> <i className="bi bi-circle-fill text-success"></i> Total Online: 100 <i className="bi bi-person-fill fs-3"></i></h5>
+            <h5 className="fw-bold shadow14"> <i className="bi bi-circle-fill text-success"></i> Total Online: 100 <i className="bi bi-person-fill fs-3"></i></h5>
             <button onClick={play}>
-            <h5 onClick={handleLogout} className="cursor-pointer fw-bold text-muted"> <i className="bi bi-box-arrow-right"></i> Logout </h5>
+            <h5 onClick={handleLogout} className="fw-bold shadow14"> <i className="bi bi-box-arrow-right"></i> Logout </h5>
             </button>
             </div>
         </div>
