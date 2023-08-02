@@ -23,9 +23,9 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     const { animationName, animationCount, setShake, shake } = useContext(ShakeContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [peerId, setPeerId] = useState("")
     const [finding, setFinding] = useState(false)
     const [localStream, setLocalStream] = useState('')
-    const [peerId, setPeerId] = useState('')
     const [room, setRoom] = useState('')
     const [myPeer] = useState(new Peer())
     const username = useSelector(state => {
@@ -33,7 +33,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     }) 
     const sendMessage = (event) => {
       event.preventDefault()
-        if(room && message) {
+        if(message) {
           socket.emit("send-message", message, room)
           setChats([...chats, {message, sender: true}])
         }
@@ -43,6 +43,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       if(!room) {
         setFinding(true)
         setReady(false)
+        console.log(peerId)
         socket.emit("join-room", username, peerId)
       } else {
         setGenerateCode(false)
@@ -50,7 +51,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         setReady(false)
         socket.emit("user-leave-room", room)
         setRoom('')
-        socket.emit("join-room", username, peerId)
       }
     }
     const handleLeaveMatch = () => {
@@ -123,7 +123,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
           myVideo.muted = true
           myVideo.srcObject = stream
           myVideo.onloadedmetadata = () => myVideo.play()
-          console.log(username, `user ID`, 'from navigator.mediaDevices')
 
           myPeer.on("call", call => {
             console.log(`ada telpon masuk`, stream, 'from myPeer.on call navigator')
@@ -139,7 +138,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
             })
           })
       })
-
       window.onbeforeunload = (event) => {
         const e = event || window.event;
         e.preventDefault();
@@ -221,13 +219,13 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       }
     }, [finding])
     return (
-      <div className='d-flex gap-2 position-relative' style={{height: '30%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
+      <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
         <Disaster setShake={setShake}/>
-        <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
+        <div className="d-flex h-100 w-50 bg-dark shadow-main rounded-4  align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
         </div>
-        <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden position-relative" style={{border: '3px solid white'}}>
-          {finding && <img className="position-absolute bottom-0" style={{width:"100%", height: "80%"}} src="https://media.tenor.com/BiPileueKYwAAAAC/stickman-fight.gif"></img>}
+        <div className="d-flex h-100 w-50 bg-dark shadow-main rounded-4 align-items-center justify-content-center overflow-hidden position-relative" style={{border: '3px solid white'}}>
+          {finding &&  <img src="https://cdn.discordapp.com/attachments/1131882116976742410/1134404760036966410/hecktivwarsOrab.png" className="img-shake position-absolute" style={{width: "70%", animation: "shake 0.5s", animationIterationCount: "infinite"}}/>}
           {finding && <span className="text-white position-absolute fs-4 d-flex top-0 mt-3" style={{zIndex: 2}}>Finding match... <Stopwatch finding={finding}/></span>}
           <video src="" id="remote-video" className='w-100'></video>
         </div>

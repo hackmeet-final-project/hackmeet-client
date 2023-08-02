@@ -13,7 +13,7 @@ const Disaster = ({setShake}) => {
     }
     
     return (
-        <div className="d-flex align-items-center justify-content-center position-absolute" style={{bottom: 0, right: "50%", transform: "translate(50%, 50%)", height: "12vh", width: "12vh", zIndex: 1001}}>
+        <div className="d-flex align-items-center justify-content-center position-absolute" style={{bottom: 20, right: "50%", transform: "translate(50%, 50%)", height: "12vh", width: "12vh", zIndex: 1001}}>
             <img onClick={geter} src="https://cdn.discordapp.com/attachments/1131882116976742410/1135969769607151687/dontpress-removebg-preview.png" style={{height: "12vh", width: "12vh", zIndex: 9999, cursor: "pointer"}} id="dont-press"/>
         </div>
     )

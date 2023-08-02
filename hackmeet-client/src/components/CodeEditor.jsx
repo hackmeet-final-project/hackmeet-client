@@ -1,11 +1,11 @@
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { useToast } from "@chakra-ui/react";
 import ShakeContext from "../context/ShakeContext";
 
-export default function CodeEditor({ getWinner }) {
+export default function CodeEditor({ getWinner, generateCode, coding }) {
   const toast = useToast();
   const { animationName, animationCount } = useContext(ShakeContext);
   const [passed, setPassed] = useState([]);
@@ -98,13 +98,9 @@ export default function CodeEditor({ getWinner }) {
     }
   });
 
-  if (isLoading) {
-    return <h3 className="m-3">Loading....fetching data</h3>;
-  }
-
   return (
     <div
-      className="w-100 h-100 d-flex flex-column p-1"
+      className="w-100 h-100 d-flex flex-column gap-1 pt-2 p-1 position-relative"
       style={{
         animation: animationName,
         animationIterationCount: animationCount,
@@ -112,7 +108,7 @@ export default function CodeEditor({ getWinner }) {
     >
       <Editor
         width="100%"
-        height="70%"
+        height="75%"
         value={answer}
         theme="vs-light"
         defaultLanguage="javascript"
@@ -121,22 +117,23 @@ export default function CodeEditor({ getWinner }) {
       />
       <div
         id="consolelog"
-        className="w-100 position-relative px-3 py-2 rounded-bottom-4 d-flex flex-column overflow-scroll"
+        className="w-100 px-3 py-2 rounded-bottom-4 d-flex flex-column overflow-scroll"
         style={{
-          height: "30%",
-          boxShadow: "rgba(0, 0, 0, 0.45) 0px -1px 25px -10px",
+          height: "25%",
+          boxShadow: "rgba(0, 0, 0, 0.45) 0px -1px 25px -10px"
         }}
       >
         {showError.argsError ? showError.message : ""}
         {showPassed}
-        <button
+      </div>
+       { coding && 
+       <button
           className="btn shadow-main text-white button-hover position-absolute"
-          style={{ right: 5, bottom: 0, backgroundColor: "var(--third-color)" }}
+          style={{ right: 10, bottom: 10, backgroundColor: "var(--third-color)" }}
           onClick={handleSubmit}
         >
           Submit
-        </button>
-      </div>
+        </button>}
     </div>
   );
 }

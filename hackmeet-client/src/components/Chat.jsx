@@ -1,24 +1,24 @@
 import useSound from 'use-sound';
 import popSound2 from "../audio/popSound2.mp3"
 import EmojiPicker from 'emoji-picker-react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 
 const Chat = ({ sendMessage, setMessage, message, chats }) => {
     const [play] = useSound(popSound2);
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const handleFormChange = (event) => {
         setMessage(event.target.value)
     }
 
-    const handleEmojiClick = () => {
-        setShowEmojiPicker(!showEmojiPicker);
-    };
-
     const handleEmojiSelect = (emoji) => {
         setMessage(message + emoji);
     };
+
+    useEffect(() => {
+        const chatBox = document.getElementById("chat-container")
+        chatBox.scrollTop = chatBox.scrollHeight
+      }, [chats])
 
     const renderChat = chats.map((chat, index) => {
         if (chat.sender) {
@@ -29,24 +29,21 @@ const Chat = ({ sendMessage, setMessage, message, chats }) => {
     })
     return (
         <>
-            <div className="h-100 w-100 d-flex flex-column align-items-start gap-3 overflow-y-scroll" id="chat-container">
+            <div className="h-75 w-100 d-flex flex-column align-items-start gap-3 overflow-y-scroll px-2 py-5 mb-4" id="chat-container">
                 {renderChat}
+                <form className="d-flex position-absolute" style={{ bottom: "40%", width: "95%" }} onSubmit={sendMessage}>
+                    <input type="text" className="form-control shadow-main" value={message} onChange={handleFormChange} />
+                    <button onClick={play} type="submit" className="btn button-hover text-white shadow-main" style={{ backgroundColor: "var(--third-color" }}>Send</button>
+                </form>
             </div>
-            <form className="d-flex position-absolute" style={{ bottom: 5, width: "95%" }} onSubmit={sendMessage}>
-                <input type="text" className="form-control shadow-main" value={message} onChange={handleFormChange} />
-                <i
-                    onClick={handleEmojiClick}
-                    className="bi bi-emoji-smile fs-2"
-                    style={{ cursor: "pointer" }}
-                ></i>
-                <button onClick={play} type="submit" className="btn button-hover text-white shadow-main" style={{ backgroundColor: "var(--third-color" }}>Send</button>
-            </form>
-            {showEmojiPicker && (
                 <EmojiPicker
-                    onEmojiClick={(event, emojiObject) => handleEmojiSelect(emojiObject.emoji)}
-                    disableSearchBar={true}
+                    id="emoji-picker"
+                    className="h-25 bg-dark"
+                    width={"100%"}
+                    onEmojiClick={(emojiObject) => handleEmojiSelect(emojiObject.emoji)}
+                    searchDisabled={true}
+                    lazyLoadEmojis={true}
                 />
-            )}
         </>
     )
 }

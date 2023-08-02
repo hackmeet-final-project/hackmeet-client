@@ -3,7 +3,7 @@ import { FETCH_ALL_QUESTION, GENERATE_RANDOM_QUESTION, SET_QUESTION_LOADING } fr
 const initialState = {
   data: [],
   id: null,
-  defaultAnswer: "",
+  defaultAnswer: "\n \n //this is your editor \n \n",
   question: "",
   testcases: [],
   isLoading: true

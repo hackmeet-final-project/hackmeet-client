@@ -62,54 +62,45 @@ const Battle = () => {
     }
   }, [ready])
 
-  useEffect(() => {
-    console.log("ready", ready)
-    console.log("generateCode", generateCode)
-    console.log("startCoding", startCoding)
-    console.log("coding", coding)
-  }, [ready, generateCode, startCoding, coding])
-
     return (
-      <div className="container-fluid w-100" style={{ height: "100vh", animation: animationName, animationIterationCount: animationCount}}>
+      <div className="container-fluid w-100 px-5" style={{ height: "100vh", animation: animationName, animationIterationCount: animationCount}}>
         <MatchFound hide={hide} startCoding={startCoding}/>
-        <div className="container gap-3 py-5 d-flex h-100">
-          <div className="d-flex flex-column gap-3 my-5 w-75 h-100 position-relative pb-4">
+        <div className="gap-3 py-5 d-flex h-100 px-5">
+          <div className="d-flex flex-column gap-3 w-75 h-100 position-relative">
             <Timer coding={coding} setCoding={setCoding} startCoding={startCoding} setStartCoding={setStartCoding} getDraw={getDraw}/>
             <Media ref={mediaRef} ready={ready} setReady={setReady} message={message} setMessage={setMessage} chats={chats} setChats={setChats} setGenerateCode={setGenerateCode} setCoding={setCoding}/>
-            <div className='d-flex' style={{height: '60%'}}>
-              <div className="h-100 w-50 shadow-main d-flex flex-column align-items-center justify-content-center overflow-hidden rounded-start-4 bg-white" style={{border: '3px solid white', boxShadow: "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"}}>
-                {generateCode ? <CodeEditor getWinner={getWinner}/> : <img src="https://i.imgur.com/P8Sv3Ek.png" className="mb-3 mt-3 img-shake" style={{width: "70%"}}/>}
-              </div>
-              <div className="h-100 w-50 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-end-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
-                  {generateCode ? 
-                    <p className='text-dark fs-5' style={{textAlign: 'justify'}}>
-                      {question}
-                    </p> 
-                    : 
-                    <div className="position-relative d-flex align-items-center justify-content-center">
-                      <i className="bi bi-question position-absolute display-1"></i>
-                      <i className="bi bi-cloud-fill text-white" style={{fontSize: '300px', textShadow: "3px 4px 10px rgba(0, 0, 0, 0.57)"}}>
-                      </i>
-                    </div> 
-                  }
-                <div className="d-flex position-absolute gap-1" style={{width: "230px", bottom: 10, right: 5}}>
-                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--primary-color)"}} onClick={() => mediaRef.current.handleFindMatch()}>Find Match</button>
-                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{backgroundColor: "var(--fourth-color)"}} onClick={() => mediaRef.current.handleLeaveMatch()}>Leave</button>
+            <div className='d-flex flex-column justify-content-center' style={{height: '100%'}}>
+              <div className="h-25 w-100 shadow-main d-flex align-items-center justify-content-center overflow-hidden rounded-top-4 position-relative px-5" style={{border: '3px solid white', background: 'var(--secondary-color)'}}>
+                    {generateCode ? 
+                      <p className='text-dark fs-5' style={{textAlign: 'justify', marginRight: "220px"}}>
+                        {question}
+                      </p> 
+                      : 
+                      <div className="position-relative d-flex align-items-center justify-content-center">
+                        <i className="bi bi-question position-absolute display-1"></i>
+                        <i className="bi bi-cloud-fill text-white" style={{fontSize: '120px', textShadow: "3px 4px 10px rgba(0, 0, 0, 0.57)"}}></i>
+                      </div> 
+                    }
+                  {/* button */}
+                <div className="d-flex position-absolute gap-1 h-100 py-3" style={{ width: "230px", top: 0, right: 10 }}>
+                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{ backgroundColor: "var(--primary-color)" }} onClick={() => {
+                    mediaRef.current.handleFindMatch();
+                    play2()
+                    }}>Find Match</button>
+                  <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{ backgroundColor: "var(--fourth-color)" }} onClick={() => {
+                    mediaRef.current.handleLeaveMatch();
+                    play()
+                  }}>Leave</button>
                 </div>
-              <div className="d-flex position-absolute gap-1" style={{ width: "230px", bottom: 10, right: 5 }}>
-                <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{ backgroundColor: "var(--primary-color)" }} onClick={() => {
-                  mediaRef.current.handleFindMatch();
-                  play2()
-                  }}>Find Match</button>
-                <button className="btn w-50 shadow-main text-dark button-hover fw-bold" style={{ backgroundColor: "var(--fourth-color)" }} onClick={() => {
-                  mediaRef.current.handleLeaveMatch();
-                  play()
-                }}>Leave</button>
+                {/* button end */}
               </div>
-            </div>
+              <div className="h-75 w-100 shadow-main d-flex flex-column align-items-center justify-content-center overflow-hidden rounded-bottom-4 bg-white" style={{border: '3px solid white', boxShadow: "rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset"}}>
+                {generateCode ? <CodeEditor getWinner={getWinner} generateCode={generateCode} coding={coding}/> : ""}
+              </div>
+
           </div>
         </div>
-        <div className="w-25 shadow-main rounded-4 my-5 d-flex align-items-center justify-content-center p-2 position-relative" style={{ border: '3px solid white', backgroundColor: "rgba(255, 255, 255, 0.3)" }}>
+        <div className="w-25 h-100 shadow-main rounded-4 d-flex flex-column align-items-center justify-content-center overflow-hidden position-relative" style={{ border: '3px solid white', backgroundColor: "rgba(255, 255, 255, 0.3)" }}>
           <Chat setMessage={setMessage} message={message} chats={chats} sendMessage={(event) => mediaRef.current.sendMessage(event)} />
         </div>
       </div>

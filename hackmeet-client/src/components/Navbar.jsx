@@ -44,7 +44,7 @@ const Navbar = () => {
                 </div>
             </div>
             <div className="flex-column">
-            <h5 className="fw-bold shadow14"> <i className="bi bi-circle-fill text-success"></i> Total Online: 100 <i className="bi bi-person-fill fs-3"></i></h5>
+            <h5 className="fw-bold shadow14"> <i className="bi bi-circle-fill text-success"></i> Total Online: 2 <i className="bi bi-person-fill fs-3"></i></h5>
             <button onClick={play}>
             <h5 onClick={handleLogout} className="fw-bold shadow14"> <i className="bi bi-box-arrow-right"></i> Logout </h5>
             </button>
