@@ -18,8 +18,8 @@ const Battle = () => {
   const { animationName, animationCount } = useContext(ShakeContext);
   const [play] = useSound(popSound);
   const [play2] = useSound(openSound);
-  const [ready, setReady] = useState(true); //test state:false
-  const [generateCode, setGenerateCode] = useState(true); //test ediot state:false
+  const [ready, setReady] = useState(false);
+  const [generateCode, setGenerateCode] = useState(false);
   const [startCoding, setStartCoding] = useState(false);
   const [coding, setCoding] = useState(false);
   const [message, setMessage] = useState("");
@@ -46,13 +46,13 @@ const Battle = () => {
           const generateNumber = Math.floor(Math.random() * soal.length);
           dispatch(generateQuestion(generateNumber));
           setGenerateCode(true);
-          setHide(false); //test editr state:true
-          // setTimeout(() => {
-          //   setStartCoding(true);
-          // }, 2000);
-          // setTimeout(() => {
-          //   setHide(false);
-          // }, 7000);
+          setHide(false);
+          setTimeout(() => {
+            setStartCoding(true);
+          }, 2000);
+          setTimeout(() => {
+            setHide(false);
+          }, 7000);
         })
         .catch((error) => {
           console.log(error);
