@@ -34,11 +34,9 @@ const TimerSecond = ({seconds, coding, setCoding, startCoding, setStartCoding, g
       }
 
       if(coding) {
-        console.log(`dari timer <<<<<<<`)
         setCoding(false)
         getDraw()
       }
-      console.log("timer done")
     }
   }, [timer])
 

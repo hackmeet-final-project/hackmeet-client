@@ -1,11 +1,13 @@
 import { useState, useEffect, forwardRef, useImperativeHandle, useContext } from "react"
 import { Peer } from "peerjs"
 import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { updateMMR } from "../store/actions/user/actionCreator"
+import { useToast } from "@chakra-ui/react"
 import socket from "../config/socket"
 import Disaster from "./Disaster"
 import ShakeContext from "../context/ShakeContext"
+import Stopwatch from "./Stopwatch"
 
 const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats, setCoding, setGenerateCode}, ref) => {
   useImperativeHandle(ref, () => {
@@ -17,17 +19,21 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       handleSetWinner
     }
   })
+    const Toast = useToast()
     const { animationName, animationCount, setShake, shake } = useContext(ShakeContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [username, setUsername] = useState(Math.random() * 10)
+    const [finding, setFinding] = useState(false)
     const [localStream, setLocalStream] = useState('')
     const [peerId, setPeerId] = useState('')
     const [room, setRoom] = useState('')
     const [myPeer] = useState(new Peer())
+    const username = useSelector(state => {
+      return state.user.profile.firstName
+    }) 
     const sendMessage = (event) => {
       event.preventDefault()
-        if(ready && message) {
+        if(room && message) {
           socket.emit("send-message", message, room)
           setChats([...chats, {message, sender: true}])
         }
@@ -35,14 +41,22 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     }
     const handleFindMatch = () => {
       if(!room) {
+        setFinding(true)
         setReady(false)
+        socket.emit("join-room", username, peerId)
+      } else {
+        setGenerateCode(false)
+        setFinding(false)
+        setReady(false)
+        socket.emit("user-leave-room", room)
+        setRoom('')
         socket.emit("join-room", username, peerId)
       }
     }
     const handleLeaveMatch = () => {
       if(room) {
         myPeer.destroy()
-        socket.emit("user-leave-room", room)
+        socket.emit("user-leave-room", username, peerId)
       }
       navigate("/lobby")
     }
@@ -62,12 +76,13 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       })
 
       socket.on("assign-room", battleRoom => {
+          console.log(username, "masuk ke room", battleRoom)
           setRoom(battleRoom)
       })
 
       socket.on("set-ready", () => {
-        console.log(`setReady`)
         setReady(true)
+        setFinding(false)
       })
 
       socket.on("receive-message", message => {
@@ -76,12 +91,29 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         })
       })
       socket.on("draw-result", () => {
+        Toast({
+          position: "top",
+          title: "Timer Out",
+          description: "Its A Draw !",
+          status: "warning",
+          duration: 2000,
+          isClosable: true,
+        });
         dispatch(updateMMR("-10"))
-        setRoom('')
+        setCoding(false)
       })
 
       socket.on("room-deleted", () => {
-        setRoom('')
+        const remoteVideo = document.getElementById("remote-video")
+          if(remoteVideo.srcObject) {
+            remoteVideo.srcObject.getTracks().forEach(track => {
+             track.enabled = false
+           })
+          }
+          console.log("user meninggalkan room", room)
+          setGenerateCode(false)
+          setCoding(false)
+          setRoom('')
       })
 
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
@@ -97,7 +129,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
             console.log(`ada telpon masuk`, stream, 'from myPeer.on call navigator')
             call.answer(stream)
             if(call.open) {
-              console.log(call.peer)
               socket.emit("players-ready", myPeer.id)
             }
             call.on("stream", stream => {
@@ -121,9 +152,9 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
 
     useEffect(() => {
       if(localStream) {
-        console.log(peerId)
         socket.on("call-user", (peerID) => {
           if(peerID !== peerId) {
+            console.log(`ada telpon dari`, peerID)
             const call = myPeer.call(peerID, localStream)
             call.on("stream", stream => {
                 const remoteVideo = document.getElementById("remote-video")
@@ -136,13 +167,27 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       }
       if(peerId) {
         socket.on("winner-result", (winner) => {
-          setGenerateCode(false)
           setCoding(false)
-          setRoom('')
           if(peerId === winner) {
             dispatch(updateMMR("+20"))
+            Toast({
+              position: "top",
+              title: "You Won",
+              description: "See you again!",
+              status: "success",
+              duration: 2000,
+              isClosable: true,
+            });
           } else {
             dispatch(updateMMR("-20"))
+            Toast({
+              position: "top",
+              title: "You Lose",
+              description: "Better luck next time!",
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+            });
           }
         })
       }
@@ -164,14 +209,26 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         socket.removeAllListeners()
       }
     }, [shake])
+
+    useEffect(() => {
+      if(finding) {
+        const remoteVideo = document.getElementById("remote-video")
+          if(remoteVideo.srcObject) {
+            remoteVideo.srcObject.getTracks().forEach(track => {
+             track.enabled = false
+           })
+          }
+      }
+    }, [finding])
     return (
-      <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
+      <div className='d-flex gap-2 position-relative' style={{height: '30%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
         <Disaster setShake={setShake}/>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
         </div>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden position-relative" style={{border: '3px solid white'}}>
-          {!ready && <img className="position-absolute" style={{width:"100%"}} src="https://media.tenor.com/BiPileueKYwAAAAC/stickman-fight.gif"></img>}
+          {finding && <img className="position-absolute bottom-0" style={{width:"100%", height: "80%"}} src="https://media.tenor.com/BiPileueKYwAAAAC/stickman-fight.gif"></img>}
+          {finding && <span className="text-white position-absolute fs-4 d-flex top-0 mt-3" style={{zIndex: 2}}>Finding match... <Stopwatch finding={finding}/></span>}
           <video src="" id="remote-video" className='w-100'></video>
         </div>
       </div>

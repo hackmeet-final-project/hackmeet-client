@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 
-const Stopwatch = () => {
+const Stopwatch = ({finding}) => {
     const [time, setTime] = useState(0)
-    const [running, setRunning] = useState(true)
     const stopwatch = useRef()
 
     const formatTime = (time) => {
@@ -19,18 +18,18 @@ const Stopwatch = () => {
     }
 
     useEffect(() => {
-        if (running) {
+        if (finding) {
+            console.log(`stop watch jalan`)
             stopwatch.current = setInterval(() => {
                 setTime(prev => prev + 1)
             }, 1000)
         } else {
             clearInterval(stopwatch.current)
-            setRunning(false)
         }
-    }, [running])
+    }, [finding])
 
     return (
-        <h1>{formatTime(time)}</h1>
+        <h3 className="text-white ms-3">{formatTime(time)}</h3>
     )
 }
 
