@@ -38,7 +38,6 @@ const Battle = () => {
     }
 
     const getWinner = () => {
-      
       mediaRef.current.handleSetWinner()
     }
 

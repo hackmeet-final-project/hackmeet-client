@@ -1,11 +1,12 @@
 import { useState, useEffect, forwardRef, useImperativeHandle, useContext } from "react"
 import { Peer } from "peerjs"
 import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { updateMMR } from "../store/actions/user/actionCreator"
 import socket from "../config/socket"
 import Disaster from "./Disaster"
 import ShakeContext from "../context/ShakeContext"
+import Stopwatch from "./Stopwatch"
 
 const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChats, setCoding, setGenerateCode}, ref) => {
   useImperativeHandle(ref, () => {
@@ -20,11 +21,14 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     const { animationName, animationCount, setShake, shake } = useContext(ShakeContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [username, setUsername] = useState(Math.random() * 10)
+    const [finding, setFinding] = useState(false)
     const [localStream, setLocalStream] = useState('')
     const [peerId, setPeerId] = useState('')
     const [room, setRoom] = useState('')
     const [myPeer] = useState(new Peer())
+    const username = useSelector(state => {
+      return state.user.profile.firstName
+    }) 
     const sendMessage = (event) => {
       event.preventDefault()
         if(ready && message) {
@@ -35,19 +39,25 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     }
     const handleFindMatch = () => {
       if(!room) {
+        setFinding(true)
         setReady(false)
         socket.emit("join-room", username, peerId)
+      } else {
+        setFinding(false)
+        setRoom('')
+        socket.emit("user-leave-room", room)
       }
     }
     const handleLeaveMatch = () => {
       if(room) {
         myPeer.destroy()
-        socket.emit("user-leave-room", room)
+        socket.emit("user-leave-room", peerId)
       }
       navigate("/lobby")
     }
 
     const handleGameDraw = () => {
+      console.log(room)
       socket.emit("draw", room)
     }
 
@@ -66,8 +76,8 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       })
 
       socket.on("set-ready", () => {
-        console.log(`setReady`)
         setReady(true)
+        setFinding(false)
       })
 
       socket.on("receive-message", message => {
@@ -76,12 +86,22 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         })
       })
       socket.on("draw-result", () => {
+        console.log(`masuk sini`)
         dispatch(updateMMR("-10"))
         setRoom('')
       })
 
       socket.on("room-deleted", () => {
-        setRoom('')
+        console.log(`ke delete`)
+        const remoteVideo = document.getElementById("remote-video")
+          if(remoteVideo.srcObject) {
+            remoteVideo.srcObject.getTracks().forEach(track => {
+             track.enabled = false
+           })
+          }
+          setGenerateCode(false)
+          setCoding(false)
+          setRoom('')
       })
 
       navigator.mediaDevices.getUserMedia({ video:true, audio: true })
@@ -164,6 +184,17 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         socket.removeAllListeners()
       }
     }, [shake])
+
+    useEffect(() => {
+      if(finding) {
+        const remoteVideo = document.getElementById("remote-video")
+          if(remoteVideo.srcObject) {
+            remoteVideo.srcObject.getTracks().forEach(track => {
+             track.enabled = false
+           })
+          }
+      }
+    }, [finding])
     return (
       <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
         <Disaster setShake={setShake}/>
@@ -171,7 +202,8 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
           <video src="" id="local-video"  className='w-100'></video>
         </div>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden position-relative" style={{border: '3px solid white'}}>
-          {!ready && <img className="position-absolute" style={{width:"100%"}} src="https://media.tenor.com/BiPileueKYwAAAAC/stickman-fight.gif"></img>}
+          {finding && <img className="position-absolute bottom-0" style={{width:"100%", height: "80%"}} src="https://media.tenor.com/BiPileueKYwAAAAC/stickman-fight.gif"></img>}
+          {finding && <span className="text-white position-absolute fs-4 d-flex top-0 mt-3" style={{zIndex: 2}}>Finding match... <Stopwatch finding={finding}/></span>}
           <video src="" id="remote-video" className='w-100'></video>
         </div>
       </div>
