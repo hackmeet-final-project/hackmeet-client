@@ -196,7 +196,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       }
     }, [finding])
     return (
-      <div className='d-flex gap-2 position-relative' style={{height: '40%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
+      <div className='d-flex gap-2 position-relative' style={{height: '30%', animation: animationName, animationIterationCount: animationCount, zIndex: 1000}}>
         <Disaster setShake={setShake}/>
         <div className="h-100 w-50 bg-dark shadow-main rounded-4 d-flex align-items-center justify-content-center overflow-hidden" style={{border: '3px solid white'}}>
           <video src="" id="local-video"  className='w-100'></video>
