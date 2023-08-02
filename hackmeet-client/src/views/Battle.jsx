@@ -62,6 +62,13 @@ const Battle = () => {
     }
   }, [ready])
 
+  useEffect(() => {
+    console.log("ready", ready)
+    console.log("generateCode", generateCode)
+    console.log("startCoding", startCoding)
+    console.log("coding", coding)
+  }, [ready, generateCode, startCoding, coding])
+
     return (
       <div className="container-fluid w-100" style={{ height: "100vh", animation: animationName, animationIterationCount: animationCount}}>
         <MatchFound hide={hide} startCoding={startCoding}/>

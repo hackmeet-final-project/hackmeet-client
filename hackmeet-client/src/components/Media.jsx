@@ -3,6 +3,7 @@ import { Peer } from "peerjs"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { updateMMR } from "../store/actions/user/actionCreator"
+import { useToast } from "@chakra-ui/react"
 import socket from "../config/socket"
 import Disaster from "./Disaster"
 import ShakeContext from "../context/ShakeContext"
@@ -18,6 +19,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       handleSetWinner
     }
   })
+    const Toast = useToast()
     const { animationName, animationCount, setShake, shake } = useContext(ShakeContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -31,7 +33,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
     }) 
     const sendMessage = (event) => {
       event.preventDefault()
-        if(ready && message) {
+        if(room && message) {
           socket.emit("send-message", message, room)
           setChats([...chats, {message, sender: true}])
         }
@@ -43,21 +45,23 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         setReady(false)
         socket.emit("join-room", username, peerId)
       } else {
+        setGenerateCode(false)
         setFinding(false)
-        setRoom('')
+        setReady(false)
         socket.emit("user-leave-room", room)
+        setRoom('')
+        socket.emit("join-room", username, peerId)
       }
     }
     const handleLeaveMatch = () => {
       if(room) {
         myPeer.destroy()
-        socket.emit("user-leave-room", peerId)
+        socket.emit("user-leave-room", username, peerId)
       }
       navigate("/lobby")
     }
 
     const handleGameDraw = () => {
-      console.log(room)
       socket.emit("draw", room)
     }
 
@@ -72,6 +76,7 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       })
 
       socket.on("assign-room", battleRoom => {
+          console.log(username, "masuk ke room", battleRoom)
           setRoom(battleRoom)
       })
 
@@ -86,19 +91,26 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
         })
       })
       socket.on("draw-result", () => {
-        console.log(`masuk sini`)
+        Toast({
+          position: "top",
+          title: "Timer Out",
+          description: "Its A Draw !",
+          status: "warning",
+          duration: 2000,
+          isClosable: true,
+        });
         dispatch(updateMMR("-10"))
-        setRoom('')
+        setCoding(false)
       })
 
       socket.on("room-deleted", () => {
-        console.log(`ke delete`)
         const remoteVideo = document.getElementById("remote-video")
           if(remoteVideo.srcObject) {
             remoteVideo.srcObject.getTracks().forEach(track => {
              track.enabled = false
            })
           }
+          console.log("user meninggalkan room", room)
           setGenerateCode(false)
           setCoding(false)
           setRoom('')
@@ -117,7 +129,6 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
             console.log(`ada telpon masuk`, stream, 'from myPeer.on call navigator')
             call.answer(stream)
             if(call.open) {
-              console.log(call.peer)
               socket.emit("players-ready", myPeer.id)
             }
             call.on("stream", stream => {
@@ -141,9 +152,9 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
 
     useEffect(() => {
       if(localStream) {
-        console.log(peerId)
         socket.on("call-user", (peerID) => {
           if(peerID !== peerId) {
+            console.log(`ada telpon dari`, peerID)
             const call = myPeer.call(peerID, localStream)
             call.on("stream", stream => {
                 const remoteVideo = document.getElementById("remote-video")
@@ -156,13 +167,27 @@ const Media = forwardRef(({ ready, setReady, message, setMessage, chats, setChat
       }
       if(peerId) {
         socket.on("winner-result", (winner) => {
-          setGenerateCode(false)
           setCoding(false)
-          setRoom('')
           if(peerId === winner) {
             dispatch(updateMMR("+20"))
+            Toast({
+              position: "top",
+              title: "You Won",
+              description: "See you again!",
+              status: "success",
+              duration: 2000,
+              isClosable: true,
+            });
           } else {
             dispatch(updateMMR("-20"))
+            Toast({
+              position: "top",
+              title: "You Lose",
+              description: "Better luck next time!",
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+            });
           }
         })
       }
