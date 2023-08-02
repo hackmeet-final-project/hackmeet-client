@@ -55,7 +55,8 @@ export default function CodeEditor({ getWinner }) {
         result = answerFunction(...test.arguments);
         setShowError({ argsError: false });
       } catch (error) {
-        setShowError({ argsError: true, message: error.message });
+        console.log(error);
+        setShowError({ argsError: true, message: String(error) });
       }
       if (test.answer === result) {
         totalTestPassed++;
@@ -92,15 +93,16 @@ export default function CodeEditor({ getWinner }) {
     if (e[0]) {
       return (
         <span key={i + 1}>
-          test_{i + 1} function main[{String(e[1])}] should be {String(e[2])}
-          <i className="bi bi-check-square-fill text-success"></i> Passed
+          test_{i + 1} Passed
+          <i className="bi bi-check-square-fill text-success"></i>: function
+          main[{String(e[1])}] should be {String(e[2])}
         </span>
       );
     } else {
       return (
         <span key={i + 1}>
-          test_{i + 1} function main[{String(e[1])}] should be {String(e[2])}{" "}
-          <i className="bi bi-x-square-fill text-danger"></i> Failed
+          test_{i + 1} Failed<i className="bi bi-x-square-fill text-danger"></i>
+          : function main[{String(e[1])}] should be {String(e[2])}
         </span>
       );
     }
@@ -128,7 +130,8 @@ export default function CodeEditor({ getWinner }) {
         onChange={handleEditorChange}
       />
       <div
-        className="w-100 position-relative px-3 py-2 rounded-bottom-4 d-flex flex-column "
+        id="consolelog"
+        className="w-100 position-relative px-3 py-2 rounded-bottom-4 d-flex flex-column overflow-scroll"
         style={{
           height: "30%",
           boxShadow: "rgba(0, 0, 0, 0.45) 0px -1px 25px -10px",
